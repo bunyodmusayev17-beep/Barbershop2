@@ -1,26 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Poiret+One&family=Josefin+Sans:wght@400;600;700&family=Jost:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Jost:wght@400;600;700&display=swap');
 @import 'tailwindcss';
 
 /*
  * Ranglar nomi tarixiy: cream = fon, navy = asosiy matn/chiziq, cherry = urg'u.
- * Admin panel shu standart (och) qiymatlarda; ommaviy sayt .theme-letterboard bilan qayta bo'yaladi.
+ * Standart qiymatlar — Knyaz'ning och varianti (admin panel, usta kabineti): bo'r rang fon, qora matn, to'q oltin urg'u.
+ * Ommaviy sayt .theme-letterboard bilan qora kigizga qayta bo'yaladi.
  */
 @theme {
-  --color-cream: #fbf6ec;
-  --color-cream-dark: #f1e8d6;
-  --color-cherry: #d62e2e;
-  --color-cherry-dark: #b02222;
-  --color-navy: #1f3d7a;
-  --color-navy-dark: #152b57;
-  --color-ink: #1a1f2e;
-  --color-muted: #6b7280;
+  --color-cream: #f4f2ec;
+  --color-cream-dark: #e8e4da;
+  /* Oq fonda o'qiladigan to'q oltin (oq matn bilan kontrast ~5:1) */
+  --color-cherry: #966a0e;
+  --color-cherry-dark: #7a560b;
+  --color-navy: #1b1b1a;
+  --color-navy-dark: #000000;
+  --color-ink: #0b0b0b;
+  --color-muted: #6b6860;
   /* Kartochka/kiritish maydoni foni va urg'u rang ustidagi matn (mavzu bo'yicha almashadi) */
   --color-paper: #ffffff;
   --color-on-accent: #ffffff;
+  --color-oak: #a77a48;
 
-  --font-deco: 'Poiret One', serif;
-  /* Josefin Sans'da kirill yo'q — ruscha matn uchun o'xshash geometrik Jost */
-  --font-sans: 'Josefin Sans', 'Jost', system-ui, sans-serif;
+  --font-deco: 'Oswald', 'Jost', sans-serif;
+  --font-sans: 'Jost', system-ui, sans-serif;
 }
 
 /*
@@ -38,9 +40,6 @@
   --color-muted: #a8a49a;
   --color-paper: #262523;
   --color-on-accent: #1b1b1a;
-  --color-oak: #a77a48;
-  --font-deco: 'Oswald', 'Jost', sans-serif;
-  --font-sans: 'Jost', system-ui, sans-serif;
 
   color: var(--color-navy);
   font-family: var(--font-sans);
@@ -48,20 +47,10 @@
   /* Kigizning gorizontal ariqchalari (harflar shu ariqlarga tiqiladi) */
   background-image: repeating-linear-gradient(to bottom, transparent 0 10px, rgb(0 0 0 / 0.5) 10px 12px);
 }
-.theme-letterboard .font-deco {
+.font-deco {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
-}
-/* Barber-pole chizig'i o'rniga — eman yog'och ramka */
-.theme-letterboard .barber-pole {
-  background:
-    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.12) 0 2px, transparent 2px 9px, rgb(255 255 255 / 0.06) 9px 11px, transparent 11px 23px),
-    linear-gradient(var(--color-oak), #8d6337);
-}
-.theme-letterboard .pole-spin {
-  background: repeating-linear-gradient(-45deg, #f2c14e 0 18px, #f2f0ea 18px 36px, #1b1b1a 36px 54px, #f2f0ea 54px 72px);
-  background-size: 100% 203.6px;
 }
 /* To'q bloklar (footer, lenta, chaqiriq): fon/matn juftligi teskari bo'lmasin — eng to'q qora + bo'r rang */
 .theme-letterboard .band-dark {
@@ -84,15 +73,9 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Vertikal aylanuvchi barber-pole */
+/* Vertikal aylanuvchi barber-pole: oltin, bo'r, qora */
 .pole-spin {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--color-cherry) 0 18px,
-    #fff 18px 36px,
-    var(--color-navy) 36px 54px,
-    #fff 54px 72px
-  );
+  background: repeating-linear-gradient(-45deg, #f2c14e 0 18px, #f2f0ea 18px 36px, #1b1b1a 36px 54px, #f2f0ea 54px 72px);
   background-size: 100% 203.6px;
   animation: pole 3s linear infinite;
 }
@@ -231,14 +214,10 @@ a[href]:not(.inline):active,
   }
 }
 
-/* Barber-pole chizig'i */
+/* Barber-pole chizig'i o'rniga — eman yog'och ramka (sayt, admin panel, oynalar) */
 .barber-pole {
   height: 16px;
-  background: repeating-linear-gradient(
-    135deg,
-    var(--color-cherry) 0 10px,
-    #fff 10px 20px,
-    var(--color-navy) 20px 30px,
-    #fff 30px 40px
-  );
+  background:
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.12) 0 2px, transparent 2px 9px, rgb(255 255 255 / 0.06) 9px 11px, transparent 11px 23px),
+    linear-gradient(var(--color-oak), #8d6337);
 }

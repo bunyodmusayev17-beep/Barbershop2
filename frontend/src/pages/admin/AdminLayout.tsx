@@ -46,7 +46,7 @@ export function StaffArea({role}: {role: 'Admin' | 'Barber'}) {
   const nav = role === 'Admin' ? ADMIN_NAV : BARBER_NAV;
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-[#f6f1e6] lg:flex">
+      <div className="min-h-screen bg-cream lg:flex">
         <aside className={cn('fixed inset-y-0 left-0 z-40 w-64 transform bg-navy text-cream transition lg:sticky lg:top-0 lg:h-screen lg:shrink-0 lg:translate-x-0', open ? 'translate-x-0' : '-translate-x-full')}>
           <div className="barber-pole !h-2" />
           <div className="px-6 py-6">
@@ -88,7 +88,7 @@ export function StaffArea({role}: {role: 'Admin' | 'Barber'}) {
         {open ? <div className="fixed inset-0 z-30 bg-ink/40 lg:hidden" onClick={() => setOpen(false)} /> : null}
 
         <div className="min-w-0 flex-1">
-          <header className="sticky top-0 z-20 flex items-center justify-between border-b-2 border-navy/10 bg-[#f6f1e6]/95 px-4 py-3 backdrop-blur lg:hidden">
+          <header className="sticky top-0 z-20 flex items-center justify-between border-b-2 border-navy/10 bg-cream/95 px-4 py-3 backdrop-blur lg:hidden">
             <button type="button" onClick={() => setOpen(true)} aria-label="Menyu" className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-navy">
               ☰
             </button>

@@ -149,7 +149,7 @@ export default function CalendarPage() {
               const off = b.daysOff.includes(weekday);
               const items = (appointments.data ?? []).filter((a) => a.barberId === b.id);
               return (
-                <div key={b.id} className={cn('relative border-l border-navy/10', off && 'bg-[repeating-linear-gradient(45deg,#f4f0e6_0_8px,#fff_8px_16px)]')} style={{height: hours.length * HOUR_PX}}>
+                <div key={b.id} className={cn('relative border-l border-navy/10', off && 'bg-[repeating-linear-gradient(45deg,#ebe7de_0_8px,#fff_8px_16px)]')} style={{height: hours.length * HOUR_PX}}>
                   {hours.map((h, i) => (
                     <button
                       key={h}
