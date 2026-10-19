@@ -166,7 +166,7 @@ export default function CalendarPage() {
                   {offRanges(b.id).map((r) => (
                     <div
                       key={`off-${r.id}`}
-                      className="pointer-events-none absolute inset-x-0 z-[4] flex items-start justify-center overflow-hidden border-y-2 border-cherry/40 bg-[repeating-linear-gradient(45deg,rgba(214,46,46,0.08)_0_8px,rgba(255,255,255,0.6)_8px_16px)] pt-2"
+                      className="pointer-events-none absolute inset-x-0 z-[4] flex items-start justify-center overflow-hidden border-y-2 border-cherry/40 bg-[repeating-linear-gradient(45deg,rgba(150,106,14,0.1)_0_8px,rgba(255,255,255,0.6)_8px_16px)] pt-2"
                       style={{top: ((r.from - START_HOUR * 60) / 60) * HOUR_PX, height: ((r.to - r.from) / 60) * HOUR_PX}}
                     >
                       <span className="rounded-full bg-white/90 px-2 py-0.5 text-[11px] font-bold text-cherry-dark shadow-sm">Ishlamaydi · {r.reason ?? '—'}</span>

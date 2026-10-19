@@ -136,7 +136,7 @@ export function Confetti() {
           <motion.span
             key={i}
             className="absolute top-24 left-1/2 block h-2.5 w-1.5 rounded-sm"
-            style={{background: colors[i % colors.length], boxShadow: '0 0 0 1px rgba(31,61,71,0.15)'}}
+            style={{background: colors[i % colors.length], boxShadow: '0 0 0 1px rgba(0,0,0,0.15)'}}
             initial={{x: 0, y: 0, opacity: 1, rotate: 0}}
             animate={{x: Math.cos(angle) * dist, y: Math.sin(angle) * dist + 160, opacity: 0, rotate: 360 + i * 25}}
             transition={{duration: 1.6 + (i % 4) * 0.15, ease: [0.15, 0.6, 0.35, 1], delay: 0.15}}
