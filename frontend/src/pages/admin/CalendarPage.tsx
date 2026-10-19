@@ -16,7 +16,7 @@ import {Pager} from '../../components/ui/Pager';
 import {usePaged} from '../../hooks/usePaged';
 import {useSite} from '../../hooks/useSite';
 import {cn} from '../../lib/cn';
-import {addDays, parts, todayIso} from '../../lib/dates';
+import {addDays, dayMonthUz, parts, relativeDayUz, todayIso} from '../../lib/dates';
 import {NewAppointmentModal} from '../../features/appointments/NewAppointmentModal';
 
 const START_HOUR = 9;
@@ -98,14 +98,20 @@ export default function CalendarPage() {
     <>
       <PageHeader
         title="Kalendar"
-        sub={`${DAY_NAMES[weekday]}, ${date}`}
+        sub={`${DAY_NAMES[weekday]}, ${dayMonthUz(date)} ${parts(date).year}`}
         actions={
           <>
             <Btn variant="outline" onClick={() => setDate(addDays(date, -1))} aria-label="Oldingi kun">
               ←
             </Btn>
-            <Btn variant="outline" onClick={() => setDate(todayIso())}>
-              Bugun
+            {/* Ko'rsatilayotgan kun: Kecha / Bugun / Ertaga yoki "22-oktabr"; bosilsa — bugunga qaytadi */}
+            <Btn
+              variant={date === todayIso() ? 'primary' : 'outline'}
+              onClick={() => setDate(todayIso())}
+              title={date === todayIso() ? undefined : 'Bugunga qaytish'}
+              className="min-w-32"
+            >
+              {relativeDayUz(date)}
             </Btn>
             <Btn variant="outline" onClick={() => setDate(addDays(date, 1))} aria-label="Keyingi kun">
               →

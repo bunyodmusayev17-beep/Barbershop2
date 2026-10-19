@@ -12,6 +12,22 @@ export function addDays(iso: string, days: number): string {
   return dt.toISOString().slice(0, 10);
 }
 
+const MONTHS_UZ = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avgust', 'sentabr', 'oktabr', 'noyabr', 'dekabr'];
+
+/** "20-oktabr" */
+export function dayMonthUz(iso: string): string {
+  const p = parts(iso);
+  return `${p.day}-${MONTHS_UZ[p.month - 1]}`;
+}
+
+/** Bugunga nisbatan: "Kecha" / "Bugun" / "Ertaga", qolgan kunlar — "22-oktabr" */
+export function relativeDayUz(iso: string, today = todayIso()): string {
+  if (iso === today) return 'Bugun';
+  if (iso === addDays(today, 1)) return 'Ertaga';
+  if (iso === addDays(today, -1)) return 'Kecha';
+  return dayMonthUz(iso);
+}
+
 export function parts(iso: string) {
   const [y, m, d] = iso.split('-').map(Number);
   const weekday = new Date(Date.UTC(y, m - 1, d)).getUTCDay();
