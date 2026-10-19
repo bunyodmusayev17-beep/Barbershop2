@@ -1,20 +1,42 @@
 # Telegram bot + Mini App — reja
 
-## Holat (2026-10-13): kod tayyor, prod'da, faqat token qo'yilishi kerak
+## Holat (2026-10-19): kod tayyor, bot hali yaratilmagan, sayt hali serverga chiqmagan
 
-Hammasi yozilgan, 41 test + soxta Telegram API server bilan to'liq stsenariy sinovidan o'tgan:
-/start bog'lash (username va ID), yangi navbat xabari (admin + usta), 4 tugma va ruxsatlar,
+Kod tayyor, testlar (53 ta) o'tadi: /start bog'lash (username va ID), yangi navbat xabari (admin + usta), 4 tugma va ruxsatlar,
 bekor qilish → ustaga xabar, 2 soatlik eslatma, kechki hisobot, Mini App'dan parolsiz kirish → /admin.
+Mijoz uchun /start — saytdagi ma'lumot (manzil, ish vaqti, reyting, telefon; uz/ru/en — Telegram tiliga qarab) va tugmalar:
+✂️ Navbat olish (sayt → /book), 💈 Xizmatlar va narxlar (sayt → /#services), 📍 Manzil (xarita), 📞 Qo'ng'iroq.
+Buyruqlar: /start, /manzil, /aloqa.
 
-**Ishga tushirish (bir marta):**
-1. BotFather → `/revoke` → `@knyaz bot (hali yaratilmagan)` (eski token chatda ochiq qolgan) → yangi token.
-2. `ssh -t root@31.220.81.174 'read -s -p "Token: " T && echo && echo "TELEGRAM_BOT_TOKEN=$T" >> /opt/knyazbarber/.env && cd /opt/knyazbarber && docker compose up -d'`
-3. Admin: `... docker compose exec api dotnet KnyazBarber.Api.dll create-admin bunyod`,
-   so'ng `... docker compose exec api dotnet KnyazBarber.Api.dll set-telegram bunyod @sizning_username`.
-4. Telegram'da botga /start → "admin sifatida ulangansiz". Keyin ustalarni panel → Foydalanuvchilar → Telegram maydoni.
+**Qotib qolmasligi uchun:** har bir xabar/tugma 30 soniya bilan cheklangan; tugma xato bersa ham javob beriladi
+(tugmada "yuklanmoqda" osilib qolmaydi); "message is not modified" xato hisoblanmaydi; Telegram 429 qaytarsa — 3 martagacha
+qayta yuboriladi; server internet yo'q paytda ishga tushsa, bot sozlamalari har daqiqada qayta uriniladi;
+Mini App'da og'ir 3D o'chirilgan (Telegram brauzerida sekinlashadi).
 
-Bot ishga tushganda buyruqlar va "Ochish" (Mini App) menyu tugmasini o'zi sozlaydi — BotFather'da boshqa sozlash shart emas.
-Logda tekshirish: `docker compose logs api | grep Telegram` → "Telegram bot ishga tushdi: @knyaz bot (hali yaratilmagan)".
+### 1. BotFather'da bot yaratish (Sanjar yoki biz — bir marta)
+1. @BotFather → `/newbot` → nomi: `Knyaz Barber` → username: masalan `knyazbarber_bot` (band bo'lsa `knyaz_barber_bot`).
+2. `/setuserpic` → `branding/telegram-bot-avatar.png` (qayta yasash: `node scripts/make-bot-avatar.mjs`).
+3. `/setabouttext` (120 belgigacha, bot profilida):
+   `Sergeli-V, 2 dagi sartaroshxona. Onlayn navbat · +998 90 965 18 77`
+4. `/setdescription` (Start bosilishidan oldin ko'rinadi):
+   ```
+   💈 Knyaz Barber — Sergeli-V, 2.
+   Onlayn navbat oling, narxlar va ustalarni ko'ring. Start tugmasini bosing 👇
+
+   💈 Knyaz Barber — Сергели-V, 2.
+   Онлайн-запись, цены и мастера. Нажмите «Старт» 👇
+   ```
+5. Token — **chatga yozilmaydi**, faqat serverga (pastda).
+
+Buyruqlar va "Ochish" (Mini App) menyu tugmasini bot ishga tushganda o'zi sozlaydi — BotFather'da `/setcommands` shart emas.
+
+### 2. Serverga ulash (sayt serverga chiqqandan keyin — Mini App uchun HTTPS kerak)
+1. `ssh -t root@31.220.81.174 'read -s -p "Token: " T && echo && echo "TELEGRAM_BOT_TOKEN=$T" >> /opt/knyazbarber/.env && cd /opt/knyazbarber && docker compose up -d'`
+2. Admin: `... docker compose exec api dotnet KnyazBarber.Api.dll create-admin <login>`,
+   so'ng `... docker compose exec api dotnet KnyazBarber.Api.dll set-telegram <login> @telegram_username`.
+3. Telegram'da botga /start → "admin sifatida ulangansiz". Keyin ustalarni panel → Foydalanuvchilar → Telegram maydoni.
+
+Logda tekshirish: `docker compose logs api | grep Telegram` → "Telegram bot ishga tushdi: @<username>".
 
 **Muhim:** bitta token bilan faqat bitta joyda polling ishlaydi. Lokalda sinash uchun alohida test bot oching
 (`dotnet user-secrets set Telegram:BotToken ...` — foydalanuvchi o'z terminalida).

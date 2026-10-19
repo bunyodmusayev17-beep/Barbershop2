@@ -14,7 +14,9 @@ public static class TelegramConfigurations
         builder.Services.AddScoped<ITelegramAccountService, TelegramAccountService>();
         if (!telegram.Enabled) return;
 
-        builder.Services.AddSingleton<ITelegramBotClient>(_ => new TelegramBotClient(new TelegramBotClientOptions(telegram.BotToken, telegram.ApiBaseUrl)));
+        // Telegram "juda ko'p so'rov" (429) qaytarsa — kutib, 3 martagacha qayta yuboradi (xabar yo'qolmaydi)
+        builder.Services.AddSingleton<ITelegramBotClient>(_ => new TelegramBotClient(
+            new TelegramBotClientOptions(telegram.BotToken, telegram.ApiBaseUrl) {RetryCount = 3, RetryThreshold = 60}));
         builder.Services.AddScoped<ITelegramNotificationService, TelegramNotificationService>();
         builder.Services.AddScoped<ITelegramUpdateHandler, TelegramUpdateHandler>();
         builder.Services.AddHostedService<TelegramWorker>();

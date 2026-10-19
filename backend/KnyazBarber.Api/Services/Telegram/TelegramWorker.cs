@@ -19,27 +19,49 @@ public class TelegramWorker(
     IOptions<TelegramOptions> options,
     ILogger<TelegramWorker> logger) : BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken ct)
-    {
-        await SetupAsync(ct);
-        await Task.WhenAll(PollAsync(ct), SendEventsAsync(ct), ScheduleAsync(ct));
-    }
+    /// <summary>Bitta xabar/tugma yoki hodisaga ajratilgan eng ko'p vaqt — biri osilib qolsa, qolganlari kutib qolmaydi.</summary>
+    private static readonly TimeSpan WorkTimeout = TimeSpan.FromSeconds(30);
 
-    /// <summary>Bot buyruqlari va "Ochish" (Mini App) menyu tugmasi — BotFather'da qo'lda sozlash shart emas.</summary>
+    protected override Task ExecuteAsync(CancellationToken ct) =>
+        Task.WhenAll(SetupAsync(ct), PollAsync(ct), SendEventsAsync(ct), ScheduleAsync(ct));
+
+    /// <summary>
+    /// Bot buyruqlari va "Ochish" (Mini App) menyu tugmasi — BotFather'da qo'lda sozlash shart emas.
+    /// Server ishga tushganda internet bo'lmasa — har daqiqada qayta urinadi (polling bunga qaramay ishlayveradi).
+    /// </summary>
     private async Task SetupAsync(CancellationToken ct)
     {
-        try
+        while (!ct.IsCancellationRequested)
         {
-            var me = await bot.GetMe(ct);
-            await bot.DeleteWebhook(cancellationToken: ct);
-            await bot.SetMyCommands([new BotCommand {Command = "start", Description = "Boshlash"}], cancellationToken: ct);
-            if (!string.IsNullOrEmpty(options.Value.MiniAppUrl))
-                await bot.SetChatMenuButton(menuButton: new MenuButtonWebApp {Text = "Ochish", WebApp = new WebAppInfo(options.Value.MiniAppUrl)}, cancellationToken: ct);
-            logger.LogInformation("Telegram bot ishga tushdi: @{Username}", me.Username);
-        }
-        catch (Exception ex) when (ex is not OperationCanceledException)
-        {
-            logger.LogError(ex, "Telegram bot sozlanmadi (token to'g'rimi?)");
+            try
+            {
+                var me = await bot.GetMe(ct);
+                await bot.DeleteWebhook(cancellationToken: ct);
+                await bot.SetMyCommands([
+                    new BotCommand {Command = "start", Description = "Bosh sahifa va navbat olish"},
+                    new BotCommand {Command = "manzil", Description = "Manzil va xarita"},
+                    new BotCommand {Command = "aloqa", Description = "Telefon raqami"},
+                ], cancellationToken: ct);
+                await bot.SetMyCommands([
+                    new BotCommand {Command = "start", Description = "Главная и онлайн-запись"},
+                    new BotCommand {Command = "manzil", Description = "Адрес и карта"},
+                    new BotCommand {Command = "aloqa", Description = "Номер телефона"},
+                ], languageCode: "ru", cancellationToken: ct);
+                var url = options.Value.MiniAppUrl;
+                if (!string.IsNullOrEmpty(url))
+                    await bot.SetChatMenuButton(menuButton: new MenuButtonWebApp {Text = "Ochish", WebApp = new WebAppInfo(url)}, cancellationToken: ct);
+                logger.LogInformation("Telegram bot ishga tushdi: @{Username}", me.Username);
+                return;
+            }
+            catch (OperationCanceledException) when (ct.IsCancellationRequested)
+            {
+                return;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("Telegram bot sozlanmadi (token to'g'rimi? internet bormi?): {Error} — 1 daqiqadan keyin qayta uriniladi", ex.Message);
+                await Delay(TimeSpan.FromMinutes(1), ct);
+            }
         }
     }
 
@@ -93,14 +115,20 @@ public class TelegramWorker(
     /// <summary>Har bir ish alohida DI scope'da (DbContext) — bittasining xatosi boshqalarini to'xtatmaydi.</summary>
     private async Task RunScopedAsync(string name, Func<IServiceProvider, CancellationToken, Task> work, CancellationToken ct)
     {
+        using var timeout = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        timeout.CancelAfter(WorkTimeout);
         try
         {
             await using var scope = scopes.CreateAsyncScope();
-            await work(scope.ServiceProvider, ct);
+            await work(scope.ServiceProvider, timeout.Token);
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
             throw;
+        }
+        catch (OperationCanceledException)
+        {
+            logger.LogWarning("Telegram: {Work} {Seconds} soniyada tugamadi — to'xtatildi", name, WorkTimeout.TotalSeconds);
         }
         catch (Exception ex)
         {

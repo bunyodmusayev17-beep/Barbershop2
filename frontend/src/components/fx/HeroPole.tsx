@@ -1,11 +1,14 @@
 import {lazy, Suspense, useEffect, useState} from 'react';
 import {cn} from '../../lib/cn';
+import {inTelegram} from '../../lib/telegram';
 
 const Pole3D = lazy(() => import('./Pole3D'));
 
 /** 3D'ni qo'llash mumkinmi: WebGL bor, "harakatni kamaytirish" o'chiq, qurilma juda kuchsiz emas. */
 function canUse3D() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  // Telegram ichidagi brauzer (ayniqsa Android'da) WebGL'da sekinlashadi — Mini App'da yengil CSS ustun
+  if (inTelegram) return false;
   const nav = navigator as Navigator & {deviceMemory?: number; connection?: {saveData?: boolean; effectiveType?: string}};
   if (nav.deviceMemory !== undefined && nav.deviceMemory <= 2) return false;
   // Trafik tejash yoki sekin internet — 3D kutubxonani (≈230 KB) yuklamaymiz

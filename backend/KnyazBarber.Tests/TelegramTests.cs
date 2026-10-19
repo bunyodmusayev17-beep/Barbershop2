@@ -1,5 +1,6 @@
 using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
+using KnyazBarber.Api.Dtos.Public;
 using KnyazBarber.Api.Entities;
 using KnyazBarber.Api.Services.Telegram;
 
@@ -154,4 +155,66 @@ public class TelegramMessagesTests
     [Fact]
     public void Empty_day_report() =>
         Assert.Contains("navbat bo'lmadi", TelegramMessages.DailyReport(new DateOnly(2026, 10, 13), []));
+}
+
+public class TelegramWelcomeTests
+{
+    private static List<PublicHours> Every(string open, string close) =>
+        Enum.GetValues<DayOfWeek>().Select(d => new PublicHours(d, open, close)).ToList();
+
+    private static PublicSettings Settings(List<PublicHours> hours) => new(
+        "Knyaz <Barber>", new LocalizedText("Sergeli-V, 2", "Сергели-V, 2", ""), "+998 90 965 18 77", null, null,
+        41.2, 69.2, 5.0, 46, 14, hours);
+
+    [Theory]
+    [InlineData("ru", "ru")]
+    [InlineData("ru-RU", "ru")]
+    [InlineData("en", "en")]
+    [InlineData("uz", "uz")]
+    [InlineData("de", "uz")]
+    [InlineData(null, "uz")]
+    public void Language_falls_back_to_uzbek(string? code, string expected) => Assert.Equal(expected, TelegramWelcome.Lang(code));
+
+    [Fact]
+    public void Text_has_site_info_and_escapes_html()
+    {
+        var text = TelegramWelcome.Text(Settings(Every("11:00", "23:00")), "uz");
+        Assert.Contains("Knyaz &lt;Barber&gt;", text);
+        Assert.Contains("⭐ 5.0 · 46 ta baho", text);
+        Assert.Contains("📍 Sergeli-V, 2", text);
+        Assert.Contains("Har kuni 11:00–23:00", text);
+        Assert.Contains("+998 90 965 18 77", text);
+    }
+
+    [Fact]
+    public void Missing_translation_uses_uzbek_address() =>
+        Assert.Contains("📍 Sergeli-V, 2", TelegramWelcome.Text(Settings(Every("10:00", "22:00")), "en"));
+
+    [Fact]
+    public void Different_days_are_listed_from_monday()
+    {
+        var hours = Every("11:00", "23:00");
+        hours[(int)DayOfWeek.Sunday] = new PublicHours(DayOfWeek.Sunday, null, null);
+        var line = TelegramWelcome.Hours(hours, "uz")!;
+        Assert.StartsWith("Du 11:00–23:00", line);
+        Assert.EndsWith("Ya dam olish", line);
+    }
+
+    [Fact]
+    public void No_hours_when_nobody_works() =>
+        Assert.Null(TelegramWelcome.Hours(Enum.GetValues<DayOfWeek>().Select(d => new PublicHours(d, null, null)).ToList(), "uz"));
+
+    [Fact]
+    public void Keyboard_opens_site_pages_when_mini_app_is_set()
+    {
+        var rows = TelegramWelcome.Keyboard("https://knyaz.example/", "uz").InlineKeyboard.Select(r => r.ToList()).ToList();
+        Assert.Equal(3, rows.Count);
+        Assert.Equal("https://knyaz.example/book", rows[0][0].WebApp!.Url);
+        Assert.Equal("https://knyaz.example/#services", rows[1][0].WebApp!.Url);
+        Assert.Equal([TelegramWelcome.Map, TelegramWelcome.Call], rows[2].Select(b => b.CallbackData));
+    }
+
+    [Fact]
+    public void Keyboard_without_mini_app_has_only_info_buttons() =>
+        Assert.Single(TelegramWelcome.Keyboard(null, "ru").InlineKeyboard);
 }

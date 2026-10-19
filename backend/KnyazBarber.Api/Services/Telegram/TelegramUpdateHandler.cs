@@ -5,6 +5,7 @@ using KnyazBarber.Api.Entities;
 using KnyazBarber.Api.Helpers;
 using KnyazBarber.Api.Repositories;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -15,7 +16,7 @@ namespace KnyazBarber.Api.Services.Telegram;
 /// <summary>Botga kelgan xabarlar (/start — bog'lash) va navbat tugmalari (keldi/kelmadi/bekor/qo'ng'iroq).</summary>
 public class TelegramUpdateHandler(
     IBaseRepository<Appointment> appointments,
-    IBaseRepository<SiteSettings> settings,
+    IPublicSiteService publicSite,
     ITelegramBotClient bot,
     ITelegramAccountService accounts,
     ITelegramNotificationService notifications,
@@ -48,27 +49,74 @@ public class TelegramUpdateHandler(
         }
         else
         {
-            // Sartaroshxona nomi sozlamalardan — admin paneldan o'zgartirilsa bot ham yangi nomni yozadi
-            var name = (await settings.GetByIdAsync(1, ct))?.BusinessName ?? "";
-            text = $"Assalomu alaykum! <b>{WebUtility.HtmlEncode(name)}</b> 💈\n\nOnlayn navbatga yozilish uchun pastdagi tugmani bosing."
+            // /manzil va /aloqa — saytdagi "Manzil" va "Qo'ng'iroq" kabi
+            var command = m.Text?.Split(' ', '@')[0].ToLowerInvariant();
+            if (command is "/manzil" or "/location")
+            {
+                await SendLocationAsync(m.Chat.Id, ct);
+                return;
+            }
+            if (command is "/aloqa" or "/contact")
+            {
+                await SendPhoneAsync(m.Chat.Id, ct);
+                return;
+            }
+
+            // Mijoz uchun xabar saytdagi ma'lumotdan: admin panelda o'zgartirilsa bot ham yangisini yozadi
+            var lang = TelegramWelcome.Lang(from.LanguageCode);
+            var site = await publicSite.GetSiteAsync(ct);
+            text = TelegramWelcome.Text(site.Settings, lang)
                    + $"\n\n<i>Xodim bo'lsangiz, adminga Telegram ID'ingizni bering: <code>{from.Id}</code></i>";
+            await bot.SendMessage(m.Chat.Id, text, parseMode: ParseMode.Html,
+                replyMarkup: TelegramWelcome.Keyboard(options.Value.MiniAppUrl, lang), cancellationToken: ct);
+            return;
         }
 
         var url = options.Value.MiniAppUrl;
-        var keyboard = string.IsNullOrEmpty(url) ? null
-            : new InlineKeyboardMarkup(InlineKeyboardButton.WithWebApp(staff is null ? "✂️ Navbatga yozilish" : "Ochish", new WebAppInfo(url)));
+        var keyboard = string.IsNullOrEmpty(url) ? null : new InlineKeyboardMarkup(InlineKeyboardButton.WithWebApp("Ochish", new WebAppInfo(url)));
         await bot.SendMessage(m.Chat.Id, text, parseMode: ParseMode.Html, replyMarkup: keyboard, cancellationToken: ct);
+    }
+
+    private async Task SendLocationAsync(long chatId, CancellationToken ct)
+    {
+        var s = (await publicSite.GetSiteAsync(ct)).Settings;
+        await bot.SendVenue(chatId, s.Latitude, s.Longitude, s.BusinessName, s.Address.Uz, cancellationToken: ct);
+    }
+
+    private async Task SendPhoneAsync(long chatId, CancellationToken ct)
+    {
+        var s = (await publicSite.GetSiteAsync(ct)).Settings;
+        await bot.SendContact(chatId, s.Phone.Replace(" ", ""), s.BusinessName, cancellationToken: ct);
     }
 
     private async Task OnCallbackAsync(CallbackQuery q, CancellationToken ct)
     {
-        var result = await HandleCallbackAsync(q, ct);
-        logger.LogInformation("Bot tugma: {TgId} @{Username} \"{Data}\" → {Result}", q.From.Id, q.From.Username ?? "-", q.Data, result);
+        try
+        {
+            var result = await HandleCallbackAsync(q, ct);
+            logger.LogInformation("Bot tugma: {TgId} @{Username} \"{Data}\" → {Result}", q.From.Id, q.From.Username ?? "-", q.Data, result);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException || !ct.IsCancellationRequested)
+        {
+            // Javob berilmasa tugmada "yuklanmoqda" belgisi qotib qoladi — xatoda ham albatta javob beramiz
+            logger.LogError(ex, "Bot tugma xatosi: \"{Data}\"", q.Data);
+            try { await Answer(q, "Xatolik yuz berdi, birozdan keyin qayta urinib ko'ring", CancellationToken.None, alert: true); }
+            catch (Exception answerEx) { logger.LogWarning("Tugmaga javob berilmadi: {Error}", answerEx.Message); }
+        }
     }
 
     /// <summary>Tugmani bajaradi va log uchun natijani qaytaradi.</summary>
     private async Task<string> HandleCallbackAsync(CallbackQuery q, CancellationToken ct)
     {
+        // Mijoz tugmalari (manzil, qo'ng'iroq) — xodim bo'lishi shart emas
+        if (q.Data is TelegramWelcome.Map or TelegramWelcome.Call && q.Message is { } infoMsg)
+        {
+            await Answer(q, null, ct);
+            if (q.Data == TelegramWelcome.Map) await SendLocationAsync(infoMsg.Chat.Id, ct);
+            else await SendPhoneAsync(infoMsg.Chat.Id, ct);
+            return $"mijoz: {q.Data}";
+        }
+
         var user = await accounts.FindOrBindAsync(q.From.Id, q.From.Username, ct);
         if (user is null || q.Message is not { } msg || !TelegramMessages.TryParseCallback(q.Data, out var id, out var action))
         {
@@ -97,12 +145,12 @@ public class TelegramUpdateHandler(
                 return $"{user.Login}: #{a.Id} mijoz kontakti yuborildi";
 
             case TelegramMessages.Cancel when !TelegramMessages.IsFinal(a.Status):
-                await bot.EditMessageReplyMarkup(msg.Chat.Id, msg.Id, TelegramMessages.CancelConfirmKeyboard(a.Id), cancellationToken: ct);
+                await IgnoreNotModified(bot.EditMessageReplyMarkup(msg.Chat.Id, msg.Id, TelegramMessages.CancelConfirmKeyboard(a.Id), cancellationToken: ct));
                 await Answer(q, null, ct);
                 return $"{user.Login}: #{a.Id} bekor qilish tasdig'i so'raldi";
 
             case TelegramMessages.CancelNo:
-                await bot.EditMessageReplyMarkup(msg.Chat.Id, msg.Id, TelegramMessages.Keyboard(a.Id, a.Status), cancellationToken: ct);
+                await IgnoreNotModified(bot.EditMessageReplyMarkup(msg.Chat.Id, msg.Id, TelegramMessages.Keyboard(a.Id, a.Status), cancellationToken: ct));
                 await Answer(q, null, ct);
                 return $"{user.Login}: #{a.Id} bekor qilinmadi";
         }
@@ -145,8 +193,15 @@ public class TelegramUpdateHandler(
     private static string Short(string? s) => s is null ? "" : s.Length <= 60 ? s : s[..60] + "…";
 
     private Task RefreshAsync(Message msg, Appointment a, string? footer, CancellationToken ct) =>
-        bot.EditMessageText(msg.Chat.Id, msg.Id, TelegramMessages.Card(notifications.ToCard(a), CardKind.Updated, footer),
-            parseMode: ParseMode.Html, replyMarkup: TelegramMessages.Keyboard(a.Id, a.Status), cancellationToken: ct);
+        IgnoreNotModified(bot.EditMessageText(msg.Chat.Id, msg.Id, TelegramMessages.Card(notifications.ToCard(a), CardKind.Updated, footer),
+            parseMode: ParseMode.Html, replyMarkup: TelegramMessages.Keyboard(a.Id, a.Status), cancellationToken: ct));
+
+    /// <summary>Tugma ikki marta bosilsa Telegram "message is not modified" qaytaradi — bu xato emas.</summary>
+    private static async Task IgnoreNotModified(Task edit)
+    {
+        try { await edit; }
+        catch (ApiRequestException ex) when (ex.Message.Contains("message is not modified", StringComparison.OrdinalIgnoreCase)) { }
+    }
 
     private Task Answer(CallbackQuery q, string? text, CancellationToken ct, bool alert = false) =>
         bot.AnswerCallbackQuery(q.Id, text, showAlert: alert, cancellationToken: ct);
