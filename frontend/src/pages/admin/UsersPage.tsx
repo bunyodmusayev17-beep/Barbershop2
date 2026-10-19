@@ -1,5 +1,6 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useState} from 'react';
+import {Link} from 'react-router-dom';
 import {adminApi, type UserAdmin} from '../../api/admin';
 import {useAuth} from '../../hooks/useAuth';
 import {Btn} from '../../components/admin/Btn';
@@ -114,7 +115,8 @@ export default function UsersPage() {
               </Field>
               {form.role === 'Barber' ? (
                 <Field label="Qaysi usta">
-                  <Select value={form.barberId ?? ''} onChange={(e) => setForm({...form, barberId: Number(e.target.value)})} required>
+                  <Select value={form.barberId ?? ''} onChange={(e) => setForm({...form, barberId: e.target.value ? Number(e.target.value) : null})} required>
+                    <option value="">— Ustani tanlang —</option>
                     {barbers.data?.map((b) => (
                       <option key={b.id} value={b.id}>
                         {b.name}
@@ -124,12 +126,19 @@ export default function UsersPage() {
                 </Field>
               ) : null}
             </div>
+            {/* Akkaunt mavjud ustaga biriktiriladi — usta hali qo'shilmagan bo'lsa, avval "Ustalar" bo'limi */}
+            {form.role === 'Barber' && barbers.data && !barbers.data.length ? (
+              <p className="-mt-2 rounded-xl border-2 border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                Hali birorta usta yo'q. Avval <Link to="/admin/barbers" className="font-bold underline">Ustalar</Link> bo'limida ustani qo'shing (ismi, ish vaqti,
+                xizmatlari), keyin shu yerda unga akkaunt yarating.
+              </p>
+            ) : null}
             <Field
               label="Telegram (ixtiyoriy)"
               hint={
                 form.telegramLinked
                   ? "✓ Ulangan — yangi navbatlar shu Telegram'ga keladi"
-                  : "@username yoki raqamli ID. Xodim @NewyorkBarber_bot ga /start yozganda ulanadi"
+                  : "@username yoki raqamli ID. Xodim Knyaz Barber botiga /start yozganda ulanadi"
               }
             >
               <Input value={form.telegram} onChange={(e) => setForm({...form, telegram: e.target.value, telegramLinked: false})} placeholder="@username" autoCapitalize="none" autoComplete="off" />

@@ -1,5 +1,6 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {useState} from 'react';
+import {Link} from 'react-router-dom';
 import {adminApi, type Appointment} from '../../api/admin';
 import {timeOffApi, type StaffTimeOff} from '../../api/timeOff';
 import {useAuth} from '../../hooks/useAuth';
@@ -115,6 +116,11 @@ export default function TimeOffPage() {
               ))}
             </Select>
           </Field>
+          {site.data && !site.data.barbers.length ? (
+            <p className="mt-3 text-sm text-amber-800">
+              Hali birorta usta yo'q — avval <Link to="/admin/barbers" className="font-bold underline">Ustalar</Link> bo'limida qo'shing.
+            </p>
+          ) : null}
         </Panel>
       ) : null}
 
@@ -250,7 +256,8 @@ function DayToggle({day, word, timeOffs, busy, onClose, onOpen}: {
       aria-pressed={closed}
       className={cn(
         'relative overflow-hidden rounded-2xl border-2 p-5 text-left text-white shadow-sm transition-colors duration-300 disabled:opacity-60',
-        closed ? 'border-emerald-600 bg-emerald-600 hover:bg-emerald-700' : 'border-cherry bg-cherry hover:bg-cherry-dark',
+        // Mavzu rangiga (oltin) bog'lanmagan: qizil — "ishlamayman" tugmasi, yashil — kun yopilgan, bosilsa qayta ochiladi
+        closed ? 'border-emerald-600 bg-emerald-600 hover:bg-emerald-700' : 'border-red-600 bg-red-600 hover:bg-red-700',
       )}
     >
       <div className="flex items-start justify-between gap-3">

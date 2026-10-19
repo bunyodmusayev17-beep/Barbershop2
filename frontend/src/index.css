@@ -20,6 +20,8 @@
   --color-paper: #ffffff;
   --color-on-accent: #ffffff;
   --color-oak: #a77a48;
+  /* Saytdagi yorqin oltin harflar rangi (qora fonda) */
+  --color-gold: #f2c14e;
 
   --font-deco: 'Oswald', 'Jost', sans-serif;
   --font-sans: 'Jost', system-ui, sans-serif;
@@ -212,6 +214,19 @@ a[href]:not(.inline):active,
   .marquee {
     animation: none;
   }
+}
+
+/* Admin panel bloklari sayt to'qimalarida: qora kigiz (ariqchali) va eman */
+.felt {
+  background-color: #1b1b1a;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 10px, rgb(0 0 0 / 0.5) 10px 12px);
+  color: #f2f0ea;
+}
+.oak {
+  background:
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.1) 0 2px, transparent 2px 9px, rgb(255 255 255 / 0.07) 9px 11px, transparent 11px 23px),
+    linear-gradient(135deg, #b88a55, #8d6337);
+  color: #fff;
 }
 
 /* Barber-pole chizig'i o'rniga — eman yog'och ramka (sayt, admin panel, oynalar) */

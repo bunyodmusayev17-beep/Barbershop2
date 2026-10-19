@@ -47,13 +47,13 @@ export function StaffArea({role}: {role: 'Admin' | 'Barber'}) {
   return (
     <ToastProvider>
       <div className="min-h-screen bg-cream lg:flex">
-        <aside className={cn('fixed inset-y-0 left-0 z-40 w-64 transform bg-navy text-cream transition lg:sticky lg:top-0 lg:h-screen lg:shrink-0 lg:translate-x-0', open ? 'translate-x-0' : '-translate-x-full')}>
+        <aside className={cn('fixed inset-y-0 left-0 z-40 w-64 transform felt transition lg:sticky lg:top-0 lg:h-screen lg:shrink-0 lg:translate-x-0', open ? 'translate-x-0' : '-translate-x-full')}>
           <div className="barber-pole !h-2" />
           <div className="px-6 py-6">
             <Link to="/" className="block leading-none" title="Saytga o'tish">
-              <Crown className="mb-1.5 w-6" />
+              <Crown className="mb-1.5 w-6 text-gold" />
               <span className="font-deco text-3xl">{BRAND.title}</span>
-              <span className="mt-1 block font-deco text-[10px] tracking-[0.5em]">{BRAND.subtitle}</span>
+              <span className="mt-1 block font-deco text-[10px] !tracking-[0.5em] text-gold">{BRAND.subtitle}</span>
             </Link>
             <p className="mt-3 text-xs opacity-60">{role === 'Admin' ? 'Admin panel' : 'Usta kabineti'}</p>
           </div>
@@ -64,11 +64,17 @@ export function StaffArea({role}: {role: 'Admin' | 'Barber'}) {
                 to={n.to}
                 end={n.end}
                 className={({isActive}) =>
-                  cn('flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold tracking-wide transition', isActive ? 'bg-cherry text-white' : 'hover:bg-white/10')
+                  cn('flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold tracking-wide transition', isActive ? 'bg-gold text-navy shadow-[0_2px_0_#a77a48]' : 'hover:bg-white/10')
                 }
               >
-                <span aria-hidden className="w-5 text-center">{n.icon}</span>
-                {n.label}
+                {({isActive}) => (
+                  <>
+                    <span aria-hidden className={cn('w-5 text-center', isActive ? 'text-navy' : 'text-gold')}>
+                      {n.icon}
+                    </span>
+                    {n.label}
+                  </>
+                )}
               </NavLink>
             ))}
           </nav>

@@ -5,6 +5,7 @@ export function PageHeader({title, sub, actions}: {title: string; sub?: string; 
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
       <div>
         <h1 className="font-deco text-4xl text-navy md:text-5xl">{title}</h1>
+        <span aria-hidden className="oak mt-2 block h-1.5 w-16 rounded-full" />
         {sub ? <p className="mt-1 text-sm opacity-70">{sub}</p> : null}
       </div>
       {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}

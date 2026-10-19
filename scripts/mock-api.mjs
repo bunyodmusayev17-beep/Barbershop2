@@ -174,6 +174,15 @@ createServer((req, res) => {
   }
   if (req.method === 'GET' && url.pathname === '/api/admin/gallery')
     return send(200, site.gallery.map((g, i) => ({...g, sortOrder: i, barberName: barbers.find((b) => b.id === g.barberId)?.name ?? null})));
+  if (req.method === 'GET' && url.pathname === '/api/admin/stats') {
+    const last7Days = [...Array(7)].map((_, i) => {
+      const d = new Date(Date.now() - (6 - i) * 864e5).toISOString().slice(0, 10);
+      const count = [4, 7, 5, 9, 6, 11, 8][i];
+      return {date: d, count, revenue: count * 90_000};
+    });
+    return send(200, {todayCount: 8, todayRevenue: 720_000, weekCount: 50, weekRevenue: 4_500_000, upcomingCount: 12, noShowWeek: 2, last7Days,
+      barbers: barbers.map((b, i) => ({barberId: b.id, name: b.name, todayCount: 3 - i, weekCount: 20 - i * 5, weekRevenue: (20 - i * 5) * 90_000})), nextUp: []});
+  }
   // Kabinetning boshqa ro'yxatlari soxta API'da bo'sh
   if (req.method === 'GET' && (url.pathname.startsWith('/api/admin/') || url.pathname.startsWith('/api/staff/'))) return send(200, []);
   if (req.method === 'GET' && url.pathname === '/api/booking/slots') return send(200, slots(url));

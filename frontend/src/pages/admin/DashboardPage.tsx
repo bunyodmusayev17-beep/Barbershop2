@@ -13,11 +13,20 @@ import {parts} from '../../lib/dates';
 
 const DAYS = ['Yak', 'Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan'];
 
-function StatCard({label, value, sub, accent}: {label: string; value: string; sub?: string; accent?: boolean}) {
+type Tone = 'felt' | 'gold' | 'oak' | 'plain';
+const TONES: Record<Tone, string> = {
+  felt: 'felt [&_.value]:text-gold',
+  gold: 'bg-gold text-navy',
+  oak: 'oak',
+  plain: 'border-2 border-navy/15 border-t-4 border-t-gold bg-white',
+};
+
+/** Statistika kartasi — saytdagi to'qimalarda: qora kigiz, oltin, eman yoki oq */
+function StatCard({label, value, sub, tone = 'plain'}: {label: string; value: string; sub?: string; tone?: Tone}) {
   return (
-    <div className={accent ? 'rounded-2xl bg-navy p-5 text-cream' : 'rounded-2xl border-2 border-navy/15 bg-white p-5'}>
-      <p className="text-xs font-bold tracking-[0.2em] uppercase opacity-70">{label}</p>
-      <p className="mt-2 text-3xl font-bold">{value}</p>
+    <div className={`rounded-2xl p-5 shadow-sm ${TONES[tone]}`}>
+      <p className="text-xs font-bold tracking-[0.2em] uppercase opacity-80">{label}</p>
+      <p className="value mt-2 whitespace-nowrap font-deco text-3xl">{value}</p>
       {sub ? <p className="mt-1 text-xs opacity-70">{sub}</p> : null}
     </div>
   );
@@ -32,9 +41,9 @@ export default function DashboardPage() {
     <>
       <PageHeader title="Boshqaruv" sub="Bugungi holat va oxirgi 7 kun" />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard accent label="Bugun navbatlar" value={String(data.todayCount)} sub={money(data.todayRevenue)} />
-        <StatCard label="Kutilayotgan" value={String(data.upcomingCount)} sub="Kelajakdagi faol navbatlar" />
-        <StatCard label="7 kunlik daromad" value={money(data.weekRevenue)} sub={`${data.weekCount} ta navbat`} />
+        <StatCard tone="felt" label="Bugun navbatlar" value={String(data.todayCount)} sub={money(data.todayRevenue)} />
+        <StatCard tone="gold" label="Kutilayotgan" value={String(data.upcomingCount)} sub="Kelajakdagi faol navbatlar" />
+        <StatCard tone="oak" label="7 kunlik daromad" value={money(data.weekRevenue)} sub={`${data.weekCount} ta navbat`} />
         <StatCard label="Kelmaganlar (7 kun)" value={String(data.noShowWeek)} sub="Status: Kelmadi" />
       </div>
 
@@ -46,7 +55,7 @@ export default function DashboardPage() {
                 <span className="text-xs font-bold">{d.count}</span>
                 <div className="flex h-40 w-full items-end">
                   <div
-                    className="w-full rounded-t-lg bg-gradient-to-t from-navy to-cherry transition-all"
+                    className="w-full rounded-t-lg bg-gradient-to-t from-[#8d6337] to-gold transition-all"
                     style={{height: Math.max(4, Math.round((d.count / max) * 160))}}
                     title={`${d.count} ta · ${money(d.revenue)}`}
                   />
