@@ -1,0 +1,5 @@
+# Server skriptlari va konfiglari Linux'da ishlaydi — Windows'da ham LF qolsin
+*.sh text eol=lf
+*.conf text eol=lf
+deploy/*.yml text eol=lf
+Dockerfile text eol=lf
