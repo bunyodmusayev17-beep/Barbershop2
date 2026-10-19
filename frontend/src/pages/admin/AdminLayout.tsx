@@ -94,7 +94,7 @@ export function StaffArea({role}: {role: 'Admin' | 'Barber'}) {
         {open ? <div className="fixed inset-0 z-30 bg-ink/40 lg:hidden" onClick={() => setOpen(false)} /> : null}
 
         <div className="min-w-0 flex-1">
-          <header className="sticky top-0 z-20 flex items-center justify-between border-b-2 border-navy/10 bg-cream/95 px-4 py-3 backdrop-blur lg:hidden">
+          <header className="sticky top-0 z-20 flex items-center justify-between border-b-2 border-navy/10 bg-cream px-4 py-3 lg:hidden">
             <button type="button" onClick={() => setOpen(true)} aria-label="Menyu" className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-navy">
               ☰
             </button>

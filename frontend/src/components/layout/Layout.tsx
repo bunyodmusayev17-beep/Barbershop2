@@ -27,8 +27,8 @@ const SECTIONS = ['services', 'barbers', 'reviews', 'contacts'] as const;
 function Logo() {
   return (
     <Link to="/" className="flex flex-col items-center leading-none" aria-label={BRAND.name}>
-      <Crown className="mb-1 w-5 text-cherry" />
-      <span className="font-deco text-navy text-2xl">{BRAND.title}</span>
+      <Crown className="mb-0.5 w-4 text-cherry md:mb-1 md:w-5" />
+      <span className="font-deco text-navy text-xl md:text-2xl">{BRAND.title}</span>
       <span className="font-deco text-cherry text-[10px] !tracking-[0.5em] pl-[0.5em]">{BRAND.subtitle}</span>
     </Link>
   );
@@ -40,14 +40,20 @@ export function Layout() {
   const {pathname, hash} = useLocation();
   const onBooking = pathname.startsWith('/book');
 
+  // Sahifa tagidagi fon ham kigiz rangida (scroll oxirida oq chiziq ko'rinmasin)
+  useEffect(() => {
+    document.body.classList.add('lb-body');
+    return () => document.body.classList.remove('lb-body');
+  }, []);
+
   // Boshqa sahifaga/bo'limga o'tilganda mobil menyu yopiladi
   useEffect(() => setOpen(false), [pathname, hash]);
 
   return (
     <div className="theme-letterboard min-h-screen flex flex-col">
-      <header className="sticky top-0 z-40 bg-cream/95 backdrop-blur border-b-2 border-navy">
+      <header className="sticky top-0 z-40 bg-cream border-b-2 border-navy">
         <BarberPole className="!h-2" />
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 md:py-3">
           <Logo />
           <nav className="hidden md:flex items-center gap-6 text-sm font-semibold tracking-widest uppercase">
             {SECTIONS.map((s) => (
@@ -70,7 +76,7 @@ export function Layout() {
             ) : null}
             <button
               type="button"
-              className="md:hidden rounded-full border-2 border-navy w-10 h-10 flex items-center justify-center"
+              className="md:hidden rounded-full border-2 border-navy w-9 h-9 flex items-center justify-center"
               aria-label="Menu"
               aria-expanded={open}
               onClick={() => setOpen((o) => !o)}

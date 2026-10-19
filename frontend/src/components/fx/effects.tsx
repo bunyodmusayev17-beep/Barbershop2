@@ -1,6 +1,7 @@
 import {motion, useReducedMotion, useScroll, useTransform} from 'framer-motion';
 import {useRef, type ReactNode} from 'react';
 import {cn} from '../../lib/cn';
+import {useMedia} from '../../hooks/useMedia';
 
 /**
  * Sichqoncha ostida 3D egiluvchi karta. Faqat aniq ko'rsatkichli qurilmalarda (sichqoncha) ishlaydi —
@@ -84,8 +85,18 @@ export function Marquee({items, className, reverse}: {items: string[]; className
   );
 }
 
-/** Aylantirganda parallaks bilan suzuvchi bezak (qaychi, taroq, ustara) */
-export function FloatingDecor({className, speed = 80, rotate = 25, children}: {className?: string; speed?: number; rotate?: number; children: ReactNode}) {
+type DecorProps = {className?: string; speed?: number; rotate?: number; children: ReactNode};
+
+/**
+ * Aylantirganda parallaks bilan suzuvchi bezak (qaychi, taroq, ustara).
+ * Faqat sichqonchali kompyuterda — telefonda scroll'ga bog'langan JS hisob-kitob umuman ishga tushmaydi.
+ */
+export function FloatingDecor(props: DecorProps) {
+  const desktop = useMedia('(hover: hover) and (pointer: fine)');
+  return desktop ? <ParallaxDecor {...props} /> : null;
+}
+
+function ParallaxDecor({className, speed = 80, rotate = 25, children}: DecorProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const {scrollYProgress} = useScroll({target: ref, offset: ['start end', 'end start']});

@@ -8,11 +8,11 @@ import {initTelegram} from './lib/telegram'
 
 installPressFx()
 
-// Telegram Mini App bo'lsa — avval Telegram skripti (oddiy brauzerda darhol)
-initTelegram().finally(() =>
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  ),
+// Telegram Mini App bo'lsa — Telegram skripti parallel yuklanadi, sayt uni kutmaydi
+void initTelegram()
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
 )

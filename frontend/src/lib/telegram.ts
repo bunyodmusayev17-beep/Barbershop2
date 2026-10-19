@@ -12,6 +12,7 @@ type WebApp = {
   initData: string;
   ready(): void;
   expand(): void;
+  disableVerticalSwipes?(): void;
   setHeaderColor(color: string): void;
   setBackgroundColor(color: string): void;
   BackButton: BackButton;
@@ -43,11 +44,18 @@ export const inTelegram = !!tgInitData;
 
 export const webApp = (): WebApp | undefined => window.Telegram?.WebApp;
 
+let ready: Promise<void> | null = null;
+
 /**
  * Telegram ichida: rasmiy skriptni yuklaydi (u ham hash'ni o'qiydi), so'ng hash'ni tozalaydi,
  * ilovani to'liq ekranga yoyadi va rangni saytga moslaydi. Uzog'i bilan 3 soniya kutadi.
+ * Sayt buni kutmasdan chiziladi; Telegram imkoniyatlari kerak joy (Orqaga tugmasi) shu va'dani kutadi.
  */
-export async function initTelegram(): Promise<void> {
+export function initTelegram(): Promise<void> {
+  return (ready ??= load());
+}
+
+async function load(): Promise<void> {
   if (!inTelegram) return;
   await new Promise<void>((resolve) => {
     const s = document.createElement('script');
@@ -62,6 +70,8 @@ export async function initTelegram(): Promise<void> {
   if (!app) return;
   app.ready();
   app.expand();
+  // Sahifani pastga aylantirganda Mini App yopilib/kichrayib ketmasin (Telegram 7.7+)
+  app.disableVerticalSwipes?.();
   app.setHeaderColor('#1b1b1a');
   app.setBackgroundColor('#1b1b1a');
 }

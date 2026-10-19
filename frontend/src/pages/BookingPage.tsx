@@ -122,7 +122,7 @@ function Wizard({site}: {site: SiteResponse}) {
     <div ref={topRef} className="mx-auto max-w-3xl scroll-mt-24 px-4 py-10">
       <div className="text-center">
         <Ornament className="text-navy">{BRAND.name}</Ornament>
-        <h1 className="mt-3 font-deco text-5xl text-cherry md:text-6xl">{t('booking.title')}</h1>
+        <h1 className="mt-3 font-deco text-[2.1rem] text-cherry md:text-6xl">{t('booking.title')}</h1>
       </div>
 
       {done ? (
@@ -251,7 +251,7 @@ function Stepper({step, onJump}: {step: Step; onJump: (s: Step) => void}) {
 }
 
 function StepHeading({children}: {children: string}) {
-  return <h2 className="mb-5 font-deco text-4xl text-navy">{children}</h2>;
+  return <h2 className="mb-4 font-deco text-2xl text-navy md:mb-5 md:text-4xl">{children}</h2>;
 }
 
 function ServiceStep({services, selected, onPick}: {services: PublicService[]; selected: number | null; onPick: (id: number) => void}) {
@@ -551,7 +551,7 @@ function Success({booking, site, onAgain}: {booking: BookingConfirmation; site: 
           >
             ✓
           </motion.div>
-          <h2 className="mt-6 font-deco text-5xl text-navy">{t('booking.successTitle')}</h2>
+          <h2 className="mt-6 font-deco text-4xl text-navy md:text-5xl">{t('booking.successTitle')}</h2>
           <p className="mx-auto mt-2 max-w-sm opacity-80">{t('booking.successText')}</p>
           <dl className="mx-auto mt-8 max-w-sm space-y-2 text-left text-sm">
             <Row k={t('booking.bookingNumber')} v={`#${booking.id}`} />

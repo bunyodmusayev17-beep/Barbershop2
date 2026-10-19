@@ -9,7 +9,7 @@ const variants: Record<Variant, string> = {
   ghost: 'text-navy hover:bg-cream-dark',
 };
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-bold tracking-[0.15em] uppercase transition disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cherry/30';
+  'inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-bold tracking-[0.12em] md:px-6 md:py-3 md:text-sm md:tracking-[0.15em] uppercase transition disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-cherry/30';
 
 export function Button({variant = 'primary', className, ...props}: ButtonHTMLAttributes<HTMLButtonElement> & {variant?: Variant}) {
   return <button className={cn(base, variants[variant], className)} {...props} />;

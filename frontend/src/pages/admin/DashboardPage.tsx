@@ -24,9 +24,9 @@ const TONES: Record<Tone, string> = {
 /** Statistika kartasi — saytdagi to'qimalarda: qora kigiz, oltin, eman yoki oq */
 function StatCard({label, value, sub, tone = 'plain'}: {label: string; value: string; sub?: string; tone?: Tone}) {
   return (
-    <div className={`rounded-2xl p-5 shadow-sm ${TONES[tone]}`}>
+    <div className={`rounded-2xl p-4 shadow-sm md:p-5 ${TONES[tone]}`}>
       <p className="text-xs font-bold tracking-[0.2em] uppercase opacity-80">{label}</p>
-      <p className="value mt-2 whitespace-nowrap font-deco text-3xl">{value}</p>
+      <p className="value mt-1 whitespace-nowrap font-deco text-2xl md:mt-2 md:text-3xl">{value}</p>
       {sub ? <p className="mt-1 text-xs opacity-70">{sub}</p> : null}
     </div>
   );
@@ -40,7 +40,7 @@ export default function DashboardPage() {
   return (
     <>
       <PageHeader title="Boshqaruv" sub="Bugungi holat va oxirgi 7 kun" />
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-4">
         <StatCard tone="felt" label="Bugun navbatlar" value={String(data.todayCount)} sub={money(data.todayRevenue)} />
         <StatCard tone="gold" label="Kutilayotgan" value={String(data.upcomingCount)} sub="Kelajakdagi faol navbatlar" />
         <StatCard tone="oak" label="7 kunlik daromad" value={money(data.weekRevenue)} sub={`${data.weekCount} ta navbat`} />

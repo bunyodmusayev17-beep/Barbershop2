@@ -60,7 +60,7 @@
   --color-cream: #f2f0ea;
   border-color: var(--color-oak);
 }
-body:has(.theme-letterboard) {
+body.lb-body {
   background: #1b1b1a;
 }
 
@@ -75,19 +75,27 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Vertikal aylanuvchi barber-pole: oltin, bo'r, qora */
+/* Vertikal aylanuvchi barber-pole: oltin, bo'r, qora. Chiziqlar ::before'da transform bilan suriladi —
+   telefonda ham GPU'da, sahifa qayta chizilmaydi (background-position animatsiyasi har kadr qayta chizardi) */
 .pole-spin {
+  overflow: hidden;
+}
+.pole-spin::before {
+  content: '';
+  position: absolute;
+  inset: -203.6px 0 0;
   background: repeating-linear-gradient(-45deg, #f2c14e 0 18px, #f2f0ea 18px 36px, #1b1b1a 36px 54px, #f2f0ea 54px 72px);
   background-size: 100% 203.6px;
   animation: pole 3s linear infinite;
+  will-change: transform;
 }
 @keyframes pole {
   to {
-    background-position: 0 203.6px;
+    transform: translateY(203.6px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pole-spin {
+  .pole-spin::before {
     animation: none;
   }
   html {

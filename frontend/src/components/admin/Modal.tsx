@@ -19,7 +19,7 @@ export function Modal({open, title, onClose, children, wide}: {open: boolean; ti
       <div role="dialog" aria-modal aria-label={title} className={cn('max-h-[92vh] w-full overflow-y-auto rounded-t-3xl bg-cream shadow-2xl sm:rounded-3xl', wide ? 'sm:max-w-3xl' : 'sm:max-w-lg')}>
         <div className="barber-pole !h-2 rounded-t-3xl" />
         <div className="flex items-center justify-between gap-4 px-6 pt-5">
-          <h2 className="font-deco text-3xl text-navy">{title}</h2>
+          <h2 className="font-deco text-2xl text-navy md:text-3xl">{title}</h2>
           <button type="button" onClick={onClose} aria-label="Yopish" className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-navy/30 hover:border-navy">
             ✕
           </button>

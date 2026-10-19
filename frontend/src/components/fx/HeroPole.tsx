@@ -9,6 +9,8 @@ function canUse3D() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
   // Telegram ichidagi brauzer (ayniqsa Android'da) WebGL'da sekinlashadi — Mini App'da yengil CSS ustun
   if (inTelegram) return false;
+  // Telefon/planshet: WebGL doimiy chizish batareyani yeydi va scroll'ni sekinlashtiradi
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return false;
   const nav = navigator as Navigator & {deviceMemory?: number; connection?: {saveData?: boolean; effectiveType?: string}};
   if (nav.deviceMemory !== undefined && nav.deviceMemory <= 2) return false;
   // Trafik tejash yoki sekin internet — 3D kutubxonani (≈230 KB) yuklamaymiz
@@ -30,7 +32,7 @@ export function CssPole({className}: {className?: string}) {
       <div className="h-3.5 w-32 rounded-md bg-navy" />
       <div className="relative h-[62%] w-20 overflow-hidden border-x-4 border-navy bg-white">
         <div className="pole-spin absolute inset-0" />
-        <div className="absolute inset-y-0 left-2 w-3 bg-white/40 blur-sm" />
+        <div className="absolute inset-y-0 left-1 w-5 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
       </div>
       <div className="h-3.5 w-32 rounded-md bg-navy" />
       <div className="h-7 w-24 rounded-b-full border-4 border-navy bg-cream" />

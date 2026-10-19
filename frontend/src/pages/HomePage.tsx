@@ -131,7 +131,7 @@ function ServicesMarquee({data}: {data: SiteResponse}) {
 function Services({data}: {data: SiteResponse}) {
   const {t, pick, money} = useLang();
   return (
-    <section className="mx-auto max-w-6xl px-4 pt-20">
+    <section className="mx-auto max-w-6xl px-4 pt-12 md:pt-20">
       <SectionTitle id="services" title={t('sections.services')} sub={t('sections.servicesSub')} />
       <div className="mx-auto grid max-w-5xl gap-3 md:grid-cols-2">
         {data.services.map((s, i) => (
@@ -172,7 +172,7 @@ function Barbers({data}: {data: SiteResponse}) {
     document.getElementById('barbers')?.scrollIntoView({behavior: 'smooth', block: 'start'});
   };
   return (
-    <section className="mx-auto max-w-6xl px-4 pt-24">
+    <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-24">
       <SectionTitle id="barbers" title={t('sections.barbers')} sub={t('sections.barbersSub')} />
       {/* Telefonda 2 ustunli ixcham kartochkalar, kattaroq ekranda — avvalgidek */}
       <div className="mx-auto grid max-w-4xl grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
@@ -183,15 +183,15 @@ function Barbers({data}: {data: SiteResponse}) {
               {/* Rasm bosilsa — usta haqida va uning ishlari oynasi */}
               <button type="button" onClick={() => setShown(b)} aria-label={b.name} className="relative block w-full bg-cream-dark px-3 pt-4 pb-3 sm:px-5 sm:pt-5 sm:pb-4">
                 {b.photoUrl ? (
-                  <img src={b.photoUrl} alt={b.name} className="mx-auto h-20 w-20 rounded-full border-2 border-cherry object-cover sm:h-24 sm:w-24 sm:border-[3px]" />
+                  <img src={b.photoUrl} alt={b.name} className="mx-auto h-16 w-16 rounded-full border-2 border-cherry object-cover sm:h-24 sm:w-24 sm:border-[3px]" />
                 ) : (
-                  <Monogram name={b.name} className="mx-auto h-20 w-20 text-4xl sm:h-24 sm:w-24 sm:text-5xl" />
+                  <Monogram name={b.name} className="mx-auto h-16 w-16 text-3xl sm:h-24 sm:w-24 sm:text-5xl" />
                 )}
               </button>
               <div className="flex flex-1 flex-col p-3 sm:p-4">
-                <h3 className="font-deco text-2xl text-navy sm:text-3xl">{b.name}</h3>
+                <h3 className="font-deco text-xl text-navy sm:text-3xl">{b.name}</h3>
                 <p className="mt-1 text-[9px] font-bold tracking-[0.2em] uppercase text-cherry sm:text-xs sm:tracking-[0.3em]">{pick(b.title)}</p>
-                <p className="mt-2 line-clamp-3 text-xs opacity-80 sm:text-sm">{pick(b.bio)}</p>
+                <p className="mt-1.5 line-clamp-2 text-xs opacity-80 sm:mt-2 sm:line-clamp-none sm:text-sm">{pick(b.bio)}</p>
                 {b.daysOff.length ? (
                   <p className="mt-2 text-[10px] opacity-60 sm:mt-3 sm:text-xs">
                     {t('common.dayOff')}: {b.daysOff.map((d) => days[d]).join(', ')}
@@ -269,10 +269,10 @@ function Reviews({data}: {data: SiteResponse}) {
   if (!data.reviews.length) return null;
   const s = data.settings;
   return (
-    <section className="mx-auto max-w-6xl px-4 pt-24">
+    <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-24">
       <SectionTitle id="reviews" title={t('sections.reviews')} sub={t('sections.reviewsSub')} />
       <div className="mb-8 flex items-center justify-center gap-3">
-        <span className="font-deco text-6xl text-navy">{s.rating.toFixed(1)}</span>
+        <span className="font-deco text-5xl text-navy md:text-6xl">{s.rating.toFixed(1)}</span>
         <div className="text-left">
           <Stars value={s.rating} className="text-2xl" />
           <p className="text-sm opacity-70">{t('hero.ratingCount', {count: s.ratingCount})}</p>
@@ -281,7 +281,7 @@ function Reviews({data}: {data: SiteResponse}) {
       <div className="mx-auto grid max-w-5xl gap-4 md:grid-cols-3">
         {data.reviews.map((r, i) => (
           <Reveal key={r.id} delay={i * 0.06}>
-            <Card className="relative h-full p-5 text-sm">
+            <Card className="relative h-full p-4 text-sm md:p-5">
               <span aria-hidden className="absolute -top-5 left-5 font-deco text-7xl leading-none text-cherry">“</span>
               <Stars value={r.rating} />
               <p className="mt-3">{r.text}</p>
@@ -311,7 +311,7 @@ function Gallery({data}: {data: SiteResponse}) {
   const chip = (active: boolean) =>
     cn('rounded-full border-2 px-4 py-1.5 text-xs font-bold tracking-[0.15em] uppercase transition', active ? 'border-cherry bg-cherry text-on-accent' : 'border-navy/40 hover:border-cherry');
   return (
-    <section className="mx-auto max-w-6xl px-4 pt-24">
+    <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-24">
       <SectionTitle id="gallery" title={t('sections.gallery')} sub={authors.length ? t('sections.gallerySub') : undefined} />
       {authors.length ? (
         <div className="mb-6 flex flex-wrap justify-center gap-2">
@@ -350,7 +350,7 @@ function Location({data}: {data: SiteResponse}) {
   const mapSrc = `https://yandex.uz/map-widget/v1/?ll=${s.longitude}%2C${s.latitude}&z=16&pt=${s.longitude}%2C${s.latitude}%2Cpm2rdm`;
   const route = `https://yandex.uz/maps/?rtext=~${s.latitude}%2C${s.longitude}&rtt=auto`;
   return (
-    <section className="mx-auto max-w-6xl px-4 pt-24">
+    <section className="mx-auto max-w-6xl px-4 pt-14 md:pt-24">
       <SectionTitle id="contacts" title={t('sections.location')} sub={t('sections.locationSub')} />
       <div className="grid gap-6 md:grid-cols-[1.5fr_1fr]">
         <Card className="overflow-hidden">
@@ -391,14 +391,14 @@ function Location({data}: {data: SiteResponse}) {
 function CtaBand() {
   const {t} = useLang();
   return (
-    <section className="relative mx-auto max-w-6xl px-4 pt-24">
+    <section className="relative mx-auto max-w-6xl px-4 pt-14 md:pt-24">
       <FloatingDecor className="-top-2 right-6 text-navy/15" speed={50} rotate={40}>
         <RazorIcon className="h-16 w-16 md:h-20 md:w-20" />
       </FloatingDecor>
       <div className="overflow-hidden band-dark rounded-3xl border-2 border-navy bg-navy text-center text-cream">
         <BarberPole />
-        <div className="px-6 py-12">
-          <p className="font-deco text-5xl md:text-6xl">{t('hero.cta')}</p>
+        <div className="px-5 py-9 md:px-6 md:py-12">
+          <p className="font-deco text-4xl md:text-6xl">{t('hero.cta')}</p>
           <p className="mx-auto mt-3 max-w-md opacity-80">{t('hero.tagline')}</p>
           <ButtonLink to="/book" className="mt-8 !shadow-[0_4px_0_0_var(--color-cream)]">
             {t('nav.book')} ★
