@@ -1,6 +1,6 @@
 # KnyazBarber — holat va rejalar (yangi sessiya uchun)
 
-Batafsil texnik ma'lumot: [README.md](README.md).
+To'liq reja: [PLAN.md](PLAN.md) · Batafsil texnik ma'lumot: [README.md](README.md).
 
 ## Loyiha
 Knyaz Barber (Toshkent, Sergeli tumani, Sergeli-V dahasi, 2; tel. +998 90 965 18 77; Yandex: 5.0, 46 baho;
@@ -28,6 +28,7 @@ Kod tuzilishi ProfessorSyte (`D:\Coding\DotNet\Project\ProfessorSyte`) uslubiga 
 
 ## Navbatdagi ishlar
 1. ~~Logo va favicon~~ — tayyor (2026-10-18): belgi "toj + K" (`frontend/public/favicon.svg`, `favicon-32.png`,
-   `apple-touch-icon.png`), sarlavha/footer/admin'da toj + KNYAZ / BARBER (`components/ui/Crown.tsx`).2. Egasidan haqiqiy ma'lumotlar: xizmatlar va narxlar, ustalar (ism, rasm), ish vaqti, rasmlar.
+   `apple-touch-icon.png`), sarlavha/footer/admin'da toj + KNYAZ / BARBER (`components/ui/Crown.tsx`).
+2. Egasidan haqiqiy ma'lumotlar: xizmatlar va narxlar, ustalar (ism, rasm), ish vaqti, rasmlar.
 3. ~~Serverga chiqarish~~ — tayyor (2026-10-19). Yangilash: Git Bash'da `./deploy/deploy.sh`.
 4. Bot tokeni (BotFather) — egasi rozi bo'lsa.
