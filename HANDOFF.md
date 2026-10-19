@@ -23,10 +23,11 @@ Kod tuzilishi ProfessorSyte (`D:\Coding\DotNet\Project\ProfessorSyte`) uslubiga 
 - Lokal kompyuterda Docker yo'q — backend'ni bazasiz ishga tushirib bo'lmaydi.
   Frontendni ko'rish uchun: `mock-api` (`scripts/mock-api.mjs`, port 5090, Seeder namunalari) + `web-mock-api`.
 - Serverda boshqa saytlar ham ishlaydi — Knyaz faqat o'z papkasi (`/opt/knyazbarber`), konteynerlari va 8083-portini ishlatadi.
-- Prod'ga hali chiqarilmagan: DNS (`knyazbarber` A yozuvi → 31.220.81.174) va `deploy/server-setup.sh` kerak.
+- Prod (2026-10-19): https://knyaz.bunyodmusayev.uz — DNS `knyaz` A → 31.220.81.174, nginx + Let's Encrypt (avto yangilanadi),
+  kunlik zaxira 03:30 (`/etc/cron.d/knyazbarber-backup`). Prod baza toza: xizmat va ustalar admin paneldan kiritiladi.
 
 ## Navbatdagi ishlar
 1. ~~Logo va favicon~~ — tayyor (2026-10-18): belgi "toj + K" (`frontend/public/favicon.svg`, `favicon-32.png`,
    `apple-touch-icon.png`), sarlavha/footer/admin'da toj + KNYAZ / BARBER (`components/ui/Crown.tsx`).2. Egasidan haqiqiy ma'lumotlar: xizmatlar va narxlar, ustalar (ism, rasm), ish vaqti, rasmlar.
-3. Serverga chiqarish (alohida konteynerlar, port 8083, `/opt/knyazbarber`).
+3. ~~Serverga chiqarish~~ — tayyor (2026-10-19). Yangilash: Git Bash'da `./deploy/deploy.sh`.
 4. Bot tokeni (BotFather) — egasi rozi bo'lsa.
