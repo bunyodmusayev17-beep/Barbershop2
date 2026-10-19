@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="KnyazBarber.Api/KnyazBarber.Api.csproj" />
+  <Project Path="KnyazBarber.Tests/KnyazBarber.Tests.csproj" />
+</Solution>

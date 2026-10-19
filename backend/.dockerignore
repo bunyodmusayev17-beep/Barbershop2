@@ -1,0 +1,4 @@
+**/bin
+**/obj
+KnyazBarber.Tests
+KnyazBarber.Api/wwwroot/uploads/*

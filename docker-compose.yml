@@ -1,0 +1,23 @@
+# Lokal ishlab chiqish uchun PostgreSQL.
+# 5434-port: kompyuterdagi o'rnatilgan PostgreSQL (5432) bilan to'qnashmasligi uchun.
+services:
+  db:
+    image: postgres:17
+    container_name: knyazbarber-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: knyazbarber
+      POSTGRES_USER: knyazbarber
+      POSTGRES_PASSWORD: knyazbarber_dev
+    ports:
+      - "5434:5432"
+    volumes:
+      - knyazbarber-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knyazbarber -d knyazbarber"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  knyazbarber-db:

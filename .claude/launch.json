@@ -1,0 +1,64 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "api",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": [
+        "run",
+        "--project",
+        "backend/KnyazBarber.Api",
+        "--launch-profile",
+        "http"
+      ],
+      "port": 5080
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "frontend"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "web-prod-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "frontend"
+      ],
+      "env": {
+        "API_TARGET": "https://knyazbarber.bunyodmusayev.uz"
+      },
+      "port": 5173
+    },
+    {
+      "name": "mock-api",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/mock-api.mjs"
+      ],
+      "port": 5090
+    },
+    {
+      "name": "web-mock-api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--prefix",
+        "frontend"
+      ],
+      "env": {
+        "API_TARGET": "http://localhost:5090"
+      },
+      "port": 5173
+    }
+  ]
+}
