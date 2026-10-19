@@ -2,7 +2,7 @@
 # Serverni BIR MARTA tayyorlash (root). Takror ishga tushirilsa mavjud narsalarni buzmaydi.
 # Maxfiy kalitlar shu yerda tasodifiy yaratiladi va faqat /opt/knyazbarber/.env da qoladi.
 set -eu
-DOMAIN=knyazbarber.bunyodmusayev.uz
+DOMAIN=knyaz.bunyodmusayev.uz
 SERVER_IP=31.220.81.174
 cd /opt/knyazbarber
 

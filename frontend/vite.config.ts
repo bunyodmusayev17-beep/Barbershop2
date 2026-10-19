@@ -26,7 +26,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      // API_TARGET=https://knyazbarber.bunyodmusayev.uz — lokal API'siz, prod ma'lumotlari bilan UI'ni ko'rish uchun
+      // API_TARGET=https://knyaz.bunyodmusayev.uz — lokal API'siz, prod ma'lumotlari bilan UI'ni ko'rish uchun
       '/api': {target: apiTarget, changeOrigin: true},
       '/uploads': {target: apiTarget, changeOrigin: true},
     },

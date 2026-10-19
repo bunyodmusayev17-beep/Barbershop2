@@ -14,7 +14,7 @@ Kod tuzilishi ProfessorSyte (`D:\Coding\DotNet\Project\ProfessorSyte`) uslubiga 
 ## Foydalanuvchi qarorlari (2026-10-18)
 - Backend: Controller → Service (interfeys bilan) → `IBaseRepository<T>` → DbContext; papka `backend/KnyazBarber.Api`.
 - Frontend: React + TypeScript (.tsx), papkalar ProfessorSyte'dek.
-- Tillar: o'zbek, rus, ingliz. Domen: `knyazbarber.bunyodmusayev.uz`. Telegram bot — keyinroq (token yo'q, kod tayyor).
+- Tillar: o'zbek, rus, ingliz. Domen: `knyaz.bunyodmusayev.uz`. Telegram bot — keyinroq (token yo'q, kod tayyor).
 - **Dizayn: 28-variant "narxlar taxtasi"** (qora kigiz ariqchalari, eman ramka, Oswald, oltin harflar) — `src/index.css` → `.theme-letterboard`, faqat ommaviy saytda (Layout). Admin panel och rangda qoladi. 30 ta variant rasmi: `branding/dizaynlar/`.
   Brend nomi bitta joyda: `frontend/src/constants/brand.ts`.
 - Matnlarda "zapis" emas, "navbat" (sayt, admin panel, bot).

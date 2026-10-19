@@ -34,7 +34,7 @@
         "frontend"
       ],
       "env": {
-        "API_TARGET": "https://knyazbarber.bunyodmusayev.uz"
+        "API_TARGET": "https://knyaz.bunyodmusayev.uz"
       },
       "port": 5173
     },

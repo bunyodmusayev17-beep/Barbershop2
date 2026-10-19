@@ -96,5 +96,5 @@ Batafsil: [TELEGRAM-BOT.md](TELEGRAM-BOT.md).
 
 ## Server (prod)
 
-https://knyazbarber.bunyodmusayev.uz — Docker Compose (`deploy/`, web konteyneri `127.0.0.1:8083`), host nginx + certbot, har kuni zaxira.
+https://knyaz.bunyodmusayev.uz — Docker Compose (`deploy/`, web konteyneri `127.0.0.1:8083`), host nginx + certbot, har kuni zaxira.
 Yangilash: Git Bash'da `./deploy/deploy.sh`. Birinchi admin: `create-admin <login>` (konteyner ichida).

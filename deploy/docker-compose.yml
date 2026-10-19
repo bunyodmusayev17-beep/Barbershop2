@@ -29,7 +29,7 @@ services:
       ReverseProxy__TrustForwardedHeaders: "true"
       # Bot tokeni serverdagi .env da (TELEGRAM_BOT_TOKEN). Bo'sh bo'lsa bot o'chiq, sayt odatdagidek ishlaydi.
       Telegram__BotToken: ${TELEGRAM_BOT_TOKEN:-}
-      Telegram__MiniAppUrl: https://knyazbarber.bunyodmusayev.uz
+      Telegram__MiniAppUrl: https://knyaz.bunyodmusayev.uz
     volumes:
       - ./uploads:/app/wwwroot/uploads
 
