@@ -1,6 +1,6 @@
 import {motion} from 'framer-motion';
-import type {ReactNode} from 'react';
-import type {PublicSettings, SiteResponse} from '../api/types';
+import {useCallback, useState, type ReactNode} from 'react';
+import type {PublicBarber, PublicImage, PublicSettings, SiteResponse} from '../api/types';
 import {BarberPole} from '../components/ui/BarberPole';
 import {ButtonLink} from '../components/ui/Button';
 import {Card} from '../components/ui/Card';
@@ -17,6 +17,8 @@ import {Pager} from '../components/ui/Pager';
 import {useMedia} from '../hooks/useMedia';
 import {usePaged} from '../hooks/usePaged';
 import {BRAND} from '../constants/brand';
+import {Modal} from '../components/admin/Modal';
+import {cn} from '../lib/cn';
 
 function Reveal({children, delay = 0, className}: {children: ReactNode; delay?: number; className?: string}) {
   return (
@@ -163,6 +165,8 @@ function Barbers({data}: {data: SiteResponse}) {
   // Kompyuterda 2 qator × 3, telefon/planshetda 2 qator × 2 (yoki 4 ta ustma-ust)
   const wide = useMedia('(min-width: 1024px)');
   const paged = usePaged(data.barbers, wide ? 6 : 4);
+  const [shown, setShown] = useState<PublicBarber | null>(null);
+  const worksOf = (id: number) => data.gallery.filter((g) => g.barberId === id);
   const go = (p: number) => {
     paged.setPage(p);
     document.getElementById('barbers')?.scrollIntoView({behavior: 'smooth', block: 'start'});
@@ -176,13 +180,14 @@ function Barbers({data}: {data: SiteResponse}) {
           <Reveal key={b.id} delay={i * 0.08}>
             <TiltCard>
             <Card className="flex h-full flex-col overflow-hidden text-center">
-              <div className="relative bg-cream-dark px-3 pt-4 pb-3 sm:px-5 sm:pt-5 sm:pb-4">
+              {/* Rasm bosilsa — usta haqida va uning ishlari oynasi */}
+              <button type="button" onClick={() => setShown(b)} aria-label={b.name} className="relative block w-full bg-cream-dark px-3 pt-4 pb-3 sm:px-5 sm:pt-5 sm:pb-4">
                 {b.photoUrl ? (
                   <img src={b.photoUrl} alt={b.name} className="mx-auto h-20 w-20 rounded-full border-2 border-cherry object-cover sm:h-24 sm:w-24 sm:border-[3px]" />
                 ) : (
                   <Monogram name={b.name} className="mx-auto h-20 w-20 text-4xl sm:h-24 sm:w-24 sm:text-5xl" />
                 )}
-              </div>
+              </button>
               <div className="flex flex-1 flex-col p-3 sm:p-4">
                 <h3 className="font-deco text-2xl text-navy sm:text-3xl">{b.name}</h3>
                 <p className="mt-1 text-[9px] font-bold tracking-[0.2em] uppercase text-cherry sm:text-xs sm:tracking-[0.3em]">{pick(b.title)}</p>
@@ -191,6 +196,11 @@ function Barbers({data}: {data: SiteResponse}) {
                   <p className="mt-2 text-[10px] opacity-60 sm:mt-3 sm:text-xs">
                     {t('common.dayOff')}: {b.daysOff.map((d) => days[d]).join(', ')}
                   </p>
+                ) : null}
+                {worksOf(b.id).length ? (
+                  <button type="button" onClick={() => setShown(b)} className="mt-2 text-[11px] font-bold tracking-[0.15em] uppercase text-cherry underline-offset-4 hover:underline sm:text-xs">
+                    {t('works.view', {count: worksOf(b.id).length})}
+                  </button>
                 ) : null}
                 <div className="mt-auto pt-3 sm:pt-4">
                   <ButtonLink to={`/book?barber=${b.id}`} variant="outline" className="!px-3 !py-1.5 !text-[11px] !tracking-[0.1em] sm:!px-4 sm:!py-2 sm:!text-sm sm:!tracking-[0.15em]">
@@ -204,7 +214,53 @@ function Barbers({data}: {data: SiteResponse}) {
         ))}
       </div>
       <Pager page={paged.page} pages={paged.pages} onChange={go} className="mt-8" />
+      <BarberDialog barber={shown} works={shown ? worksOf(shown.id) : []} onClose={() => setShown(null)} />
     </section>
+  );
+}
+
+/** Usta haqida: rasmi, qisqacha va o'zi yuklagan ish rasmlari */
+function BarberDialog({barber, works, onClose}: {barber: PublicBarber | null; works: PublicImage[]; onClose: () => void}) {
+  const {t, pick} = useLang();
+  const [zoom, setZoom] = useState<PublicImage | null>(null);
+  const close = useCallback(() => {
+    setZoom(null);
+    onClose();
+  }, [onClose]);
+  if (!barber) return null;
+  return (
+    <Modal open title={barber.name} onClose={close} wide>
+      <div className="flex items-center gap-4">
+        {barber.photoUrl ? (
+          <img src={barber.photoUrl} alt={barber.name} className="h-20 w-20 shrink-0 rounded-full border-2 border-cherry object-cover" />
+        ) : (
+          <Monogram name={barber.name} className="h-20 w-20 shrink-0 text-4xl" />
+        )}
+        <div>
+          <p className="text-xs font-bold tracking-[0.3em] uppercase text-cherry">{pick(barber.title)}</p>
+          <p className="mt-1 text-sm opacity-80">{pick(barber.bio)}</p>
+        </div>
+      </div>
+      <p className="mt-6 mb-3 text-xs font-bold tracking-[0.3em] uppercase opacity-70">{t('works.title')}</p>
+      {zoom ? (
+        <button type="button" onClick={() => setZoom(null)} className="block w-full" aria-label="←">
+          <img src={zoom.url} alt={pick(zoom.caption)} className="max-h-[60vh] w-full rounded-2xl object-contain" />
+        </button>
+      ) : works.length ? (
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+          {works.map((w) => (
+            <button key={w.id} type="button" onClick={() => setZoom(w)} className="overflow-hidden rounded-xl border-2 border-navy/30">
+              <img src={w.url} alt={pick(w.caption)} loading="lazy" className="aspect-square w-full object-cover transition duration-300 hover:scale-105" />
+            </button>
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm opacity-60">{t('works.empty')}</p>
+      )}
+      <div className="mt-6 text-center">
+        <ButtonLink to={`/book?barber=${barber.id}`}>{t('common.bookThis')}</ButtonLink>
+      </div>
+    </Modal>
   );
 }
 
@@ -240,19 +296,49 @@ function Reviews({data}: {data: SiteResponse}) {
 
 function Gallery({data}: {data: SiteResponse}) {
   const {t, pick} = useLang();
+  // Filtr: "Hammasi" (null) yoki ishi bor usta
+  const [barberId, setBarberId] = useState<number | null>(null);
+  const [zoom, setZoom] = useState<PublicImage | null>(null);
+  const wide = useMedia('(min-width: 768px)');
+  const authors = data.barbers.filter((b) => data.gallery.some((g) => g.barberId === b.id));
+  const items = barberId ? data.gallery.filter((g) => g.barberId === barberId) : data.gallery;
+  const paged = usePaged(items, wide ? 12 : 8);
   if (!data.gallery.length) return null;
+  const choose = (id: number | null) => {
+    setBarberId(id);
+    paged.setPage(0);
+  };
+  const chip = (active: boolean) =>
+    cn('rounded-full border-2 px-4 py-1.5 text-xs font-bold tracking-[0.15em] uppercase transition', active ? 'border-cherry bg-cherry text-on-accent' : 'border-navy/40 hover:border-cherry');
   return (
     <section className="mx-auto max-w-6xl px-4 pt-24">
-      <SectionTitle id="gallery" title={t('sections.gallery')} />
+      <SectionTitle id="gallery" title={t('sections.gallery')} sub={authors.length ? t('sections.gallerySub') : undefined} />
+      {authors.length ? (
+        <div className="mb-6 flex flex-wrap justify-center gap-2">
+          <button type="button" className={chip(barberId === null)} onClick={() => choose(null)}>
+            {t('common.all')}
+          </button>
+          {authors.map((b) => (
+            <button key={b.id} type="button" className={chip(barberId === b.id)} onClick={() => choose(b.id)}>
+              {b.name}
+            </button>
+          ))}
+        </div>
+      ) : null}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-        {data.gallery.map((g, i) => (
+        {paged.items.map((g, i) => (
           <Reveal key={g.id} delay={(i % 4) * 0.05}>
-            <figure className="overflow-hidden rounded-2xl border-2 border-navy">
+            <button type="button" onClick={() => setZoom(g)} className="block w-full overflow-hidden rounded-2xl border-2 border-navy">
               <img src={g.url} alt={pick(g.caption)} loading="lazy" className="aspect-square w-full object-cover transition duration-500 hover:scale-105" />
-            </figure>
+            </button>
           </Reveal>
         ))}
       </div>
+      <Pager page={paged.page} pages={paged.pages} onChange={paged.setPage} className="mt-8" />
+      <Modal open={!!zoom} title={data.barbers.find((b) => b.id === zoom?.barberId)?.name ?? t('sections.gallery')} onClose={() => setZoom(null)} wide>
+        {zoom ? <img src={zoom.url} alt={pick(zoom.caption)} className="max-h-[70vh] w-full rounded-2xl object-contain" /> : null}
+        {zoom && pick(zoom.caption) ? <p className="mt-3 text-center text-sm opacity-80">{pick(zoom.caption)}</p> : null}
+      </Modal>
     </section>
   );
 }

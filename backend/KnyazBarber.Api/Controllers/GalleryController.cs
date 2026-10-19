@@ -16,7 +16,7 @@ public class GalleryController(IGalleryService gallery) : ControllerBase
 
     [HttpPost]
     [RequestSizeLimit(10 * (FileUploadService.MaxBytes + 64 * 1024))]
-    public Task<List<GalleryAdminDto>> Upload([FromForm] List<IFormFile> files, CancellationToken ct) => gallery.UploadAsync(files, ct);
+    public Task<List<GalleryAdminDto>> Upload([FromForm] List<IFormFile> files, CancellationToken ct) => gallery.UploadAsync(files, null, ct);
 
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, GalleryUpdate input, CancellationToken ct)

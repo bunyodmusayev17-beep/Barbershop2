@@ -23,6 +23,7 @@ export const ReviewsPage = lazyWithPreload(() => import('../pages/admin/ReviewsP
 export const UsersPage = lazyWithPreload(() => import('../pages/admin/UsersPage'));
 export const SettingsPage = lazyWithPreload(() => import('../pages/admin/SettingsPage'));
 export const TimeOffPage = lazyWithPreload(() => import('../pages/admin/TimeOffPage'));
+export const ProfilePage = lazyWithPreload(() => import('../pages/admin/ProfilePage'));
 
 function whenIdle(cb: () => void) {
   const w = window as Window & {requestIdleCallback?: (cb: () => void, o?: {timeout: number}) => number};
@@ -41,6 +42,6 @@ export function preloadPublic() {
 /** Xodimlar uchun: login sahifasiga kirilganda yoki tizimga kirgandan keyin — admin bo'limlari */
 export function preloadStaff() {
   whenIdle(() => {
-    for (const p of [StaffArea, DashboardPage, AppointmentsView, CalendarPage, TimeOffPage, ServicesPage, BarbersPage, GalleryPage, ReviewsPage, UsersPage, SettingsPage]) p.preload();
+    for (const p of [StaffArea, DashboardPage, AppointmentsView, CalendarPage, TimeOffPage, ServicesPage, BarbersPage, GalleryPage, ReviewsPage, UsersPage, SettingsPage, ProfilePage]) p.preload();
   });
 }

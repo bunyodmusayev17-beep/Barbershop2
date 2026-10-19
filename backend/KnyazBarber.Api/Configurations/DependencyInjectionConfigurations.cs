@@ -22,6 +22,7 @@ public static class DependencyInjectionConfigurations
         builder.Services.AddScoped<IBarberManagementService, BarberManagementService>();
         builder.Services.AddScoped<IServiceCatalogService, ServiceCatalogService>();
         builder.Services.AddScoped<IGalleryService, GalleryService>();
+        builder.Services.AddScoped<IBarberProfileService, BarberProfileService>();
         builder.Services.AddScoped<IReviewService, ReviewService>();
         builder.Services.AddScoped<ISettingsService, SettingsService>();
         builder.Services.AddScoped<IStatsService, StatsService>();

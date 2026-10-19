@@ -13,4 +13,6 @@ public class Barber
     public List<BarberService> Services { get; set; } = [];
     public List<WorkingHours> WorkingHours { get; set; } = [];
     public List<TimeOff> TimeOffs { get; set; } = [];
+    /// <summary>Ustaning o'zi yuklagan ish rasmlari (galereyada ham ko'rinadi).</summary>
+    public List<GalleryImage> Works { get; set; } = [];
 }

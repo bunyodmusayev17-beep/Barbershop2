@@ -39,7 +39,8 @@ export type PublicBarber = {
 
 export type PublicReview = {id: number; authorName: string; rating: number; text: string; createdAt: string};
 
-export type PublicImage = {id: number; url: string; caption: LocalizedText};
+/** barberId — usta o'zi yuklagan ish bo'lsa */
+export type PublicImage = {id: number; url: string; caption: LocalizedText; barberId: number | null};
 
 export type SiteResponse = {
   settings: PublicSettings;

@@ -11,9 +11,9 @@ public class GalleryService(IBaseRepository<GalleryImage> images, IFileUploadSer
 {
     public Task<List<GalleryAdminDto>> ListAsync(CancellationToken ct) =>
         images.QueryNoTracking().OrderBy(g => g.SortOrder).ThenBy(g => g.Id)
-            .Select(g => new GalleryAdminDto(g.Id, g.Url, g.Caption, g.SortOrder)).ToListAsync(ct);
+            .Select(g => new GalleryAdminDto(g.Id, g.Url, g.Caption, g.SortOrder, g.BarberId, g.Barber != null ? g.Barber.Name : null)).ToListAsync(ct);
 
-    public async Task<List<GalleryAdminDto>> UploadAsync(List<IFormFile> uploads, CancellationToken ct)
+    public async Task<List<GalleryAdminDto>> UploadAsync(List<IFormFile> uploads, int? barberId, CancellationToken ct)
     {
         if (uploads.Count is 0 or > 10) throw new BadRequestException("1 dan 10 tagacha rasm tanlang");
         var order = (await images.QueryNoTracking().MaxAsync(g => (int?)g.SortOrder, ct) ?? 0) + 1;
@@ -22,7 +22,7 @@ public class GalleryService(IBaseRepository<GalleryImage> images, IFileUploadSer
         {
             foreach (var f in uploads)
             {
-                var img = new GalleryImage {Url = await files.SaveImageAsync(f, ct), SortOrder = order++};
+                var img = new GalleryImage {Url = await files.SaveImageAsync(f, ct), SortOrder = order++, BarberId = barberId};
                 added.Add(img);
                 images.Add(img);
             }
@@ -38,7 +38,7 @@ public class GalleryService(IBaseRepository<GalleryImage> images, IFileUploadSer
             throw;
         }
         await images.SaveChangesAsync(ct);
-        return added.Select(g => new GalleryAdminDto(g.Id, g.Url, g.Caption, g.SortOrder)).ToList();
+        return added.Select(g => new GalleryAdminDto(g.Id, g.Url, g.Caption, g.SortOrder, g.BarberId, null)).ToList();
     }
 
     public async Task UpdateAsync(int id, GalleryUpdate input, CancellationToken ct)

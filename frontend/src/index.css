@@ -143,7 +143,7 @@ a[href]:not(.inline):active,
 
 /* Sahifa ochilish animatsiyasi */
 .page-enter {
-  animation: page-enter 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: page-enter 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; /* "both" emas: tugagach transform qolsa, ichidagi fixed oynalar (Modal) siljiydi */
 }
 @keyframes page-enter {
   from {

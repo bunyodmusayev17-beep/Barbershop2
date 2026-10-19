@@ -47,8 +47,11 @@ public class BarberManagementService(
             await barbers.SaveChangesAsync(ct);
             return;
         }
+        // Ish rasmlari bazadan kaskad bilan o'chadi, fayllarini esa o'zimiz o'chiramiz
+        var works = await barbers.QueryNoTracking().Where(x => x.Id == id).SelectMany(x => x.Works.Select(w => w.Url)).ToListAsync(ct);
         files.DeleteImage(b.PhotoUrl);
         await barbers.DeleteAsync(b, ct);
+        works.ForEach(files.DeleteImage);
     }
 
     public async Task<BarberAdminDto> UploadPhotoAsync(int id, IFormFile file, CancellationToken ct)

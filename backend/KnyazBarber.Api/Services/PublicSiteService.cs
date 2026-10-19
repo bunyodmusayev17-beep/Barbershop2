@@ -42,8 +42,10 @@ public class PublicSiteService(
         var published = await reviews.QueryNoTracking().Where(r => r.IsPublished).OrderByDescending(r => r.CreatedAt)
             .Take(20).Select(r => new PublicReview(r.Id, r.AuthorName, r.Rating, r.Text, r.CreatedAt)).ToListAsync(ct);
 
-        var images = await gallery.QueryNoTracking().OrderBy(g => g.SortOrder)
-            .Select(g => new PublicImage(g.Id, g.Url, g.Caption)).ToListAsync(ct);
+        // Faol bo'lmagan ustaning ishlari saytda ko'rinmaydi
+        var images = await gallery.QueryNoTracking().Where(g => g.BarberId == null || g.Barber!.IsActive)
+            .OrderBy(g => g.SortOrder).ThenBy(g => g.Id)
+            .Select(g => new PublicImage(g.Id, g.Url, g.Caption, g.BarberId)).ToListAsync(ct);
 
         return new SiteResponse(
             new PublicSettings(s.BusinessName, s.Address, s.Phone, s.Telegram, s.Instagram, s.Latitude, s.Longitude,

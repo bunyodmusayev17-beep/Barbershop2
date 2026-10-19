@@ -6,5 +6,9 @@ namespace KnyazBarber.Api.Data.EntityConfigurations;
 
 public class GalleryImageConfiguration : IEntityTypeConfiguration<GalleryImage>
 {
-    public void Configure(EntityTypeBuilder<GalleryImage> b) => b.ComplexProperty(x => x.Caption);
+    public void Configure(EntityTypeBuilder<GalleryImage> b)
+    {
+        b.ComplexProperty(x => x.Caption);
+        b.HasOne(x => x.Barber).WithMany(x => x.Works).HasForeignKey(x => x.BarberId).OnDelete(DeleteBehavior.Cascade);
+    }
 }

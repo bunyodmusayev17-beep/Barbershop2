@@ -14,6 +14,7 @@ import {
   DashboardPage,
   GalleryPage,
   LoginPage,
+  ProfilePage,
   ReviewsPage,
   ServicesPage,
   SettingsPage,
@@ -62,6 +63,7 @@ export default function App() {
                   <Route index element={<AppointmentsView />} />
                   <Route path="calendar" element={<CalendarPage />} />
                   <Route path="timeoff" element={<TimeOffPage />} />
+                  <Route path="profile" element={<ProfilePage />} />
                 </Route>
               </Routes>
             </Suspense>

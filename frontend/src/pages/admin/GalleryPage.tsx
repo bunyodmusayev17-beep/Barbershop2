@@ -53,7 +53,7 @@ export default function GalleryPage() {
     <>
       <PageHeader
         title="Galereya"
-        sub="Ishlaringiz rasmlari — saytda galereya bo'limida ko'rinadi"
+        sub="Saytdagi galereya. Ustalar o'z ishlarini kabinetdan yuklaydi — ular usta ismi bilan belgilangan"
         actions={
           <>
             <input
@@ -84,6 +84,7 @@ export default function GalleryPage() {
           {items.data.map((g) => (
             <button key={g.id} type="button" onClick={() => setEditing(g)} className="group relative overflow-hidden rounded-2xl border-2 border-navy/15 bg-white">
               <img src={g.url} alt={g.caption.uz} className="aspect-square w-full object-cover transition group-hover:scale-105" loading="lazy" />
+              {g.barberName ? <span className="absolute top-2 left-2 rounded-full bg-cherry px-2 py-0.5 text-[10px] font-bold text-white">{g.barberName}</span> : null}
               {g.caption.uz ? <span className="absolute inset-x-0 bottom-0 bg-ink/60 px-2 py-1 text-xs text-white">{g.caption.uz}</span> : null}
             </button>
           ))}

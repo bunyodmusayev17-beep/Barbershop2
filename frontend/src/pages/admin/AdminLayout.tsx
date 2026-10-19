@@ -24,6 +24,7 @@ const BARBER_NAV = [
   {to: '/barber', label: 'Mening navbatlarim', icon: '☰', end: true},
   {to: '/barber/calendar', label: 'Kalendar', icon: '▦'},
   {to: '/barber/timeoff', label: 'Ishlamayman', icon: '✚'},
+  {to: '/barber/profile', label: 'Profilim va ishlarim', icon: '☺'},
 ];
 
 /** Kirish talab qilinadigan bo'lim. role berilsa — faqat shu rol. */

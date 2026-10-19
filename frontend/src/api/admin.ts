@@ -62,7 +62,7 @@ export type BarberAdmin = {
 };
 export type BarberInput = Pick<BarberAdmin, 'name' | 'title' | 'bio' | 'sortOrder' | 'isActive' | 'serviceIds' | 'hours'>;
 
-export type GalleryItem = {id: number; url: string; caption: LocalizedText; sortOrder: number};
+export type GalleryItem = {id: number; url: string; caption: LocalizedText; sortOrder: number; barberId: number | null; barberName: string | null};
 export type ReviewAdmin = {id: number; authorName: string; rating: number; text: string; isPublished: boolean; createdAt: string};
 export type ReviewInput = Omit<ReviewAdmin, 'id' | 'createdAt'>;
 

@@ -3,11 +3,11 @@
 Toshkentdagi Knyaz Barber (Sergeli tumani, Sergeli-V dahasi, 2) uchun to'liq tizim.
 Kod tuzilishi ProfessorSyte uslubida (Controller → Service → Repository).
 
-- **Ommaviy sayt** (o'zbek / rus / ingliz): xizmatlar va narxlar, ustalar, sharhlar, galereya, xarita.
+- **Ommaviy sayt** (o'zbek / rus / ingliz): xizmatlar va narxlar, ustalar (bosilsa — usta ishlari), sharhlar, galereya (usta bo'yicha filtr), xarita.
 - **Onlayn navbat**: xizmat → usta (yoki "istalgan usta") → sana va vaqt → ism va telefon.
   Bir ustaga bir vaqtda ikki navbat tushishi **baza darajasida** taqiqlangan (PostgreSQL `EXCLUDE` cheklovi).
 - **Admin panel**: statistika, navbatlar, kalendar, xizmatlar, ustalar (rasm, ish jadvali, ta'til), galereya, sharhlar, foydalanuvchilar, sozlamalar.
-- **Usta kabineti**: usta faqat o'z navbatlarini ko'radi va holatini belgilaydi.
+- **Usta kabineti**: usta faqat o'z navbatlarini ko'radi va holatini belgilaydi; "Profilim" — o'z rasmini qo'yadi va ish rasmlarini yuklaydi (30 tagacha, saytda darhol ko'rinadi, admin galereyadan o'chira oladi).
 - **Telegram bot** (token qo'yilganda yoqiladi): yangi navbat xabari, Keldi / Kelmadi / Bekor tugmalari, eslatma, kechki hisobot.
 
 | Qism | Texnologiya |
