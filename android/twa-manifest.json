@@ -1,0 +1,52 @@
+{
+  "packageId": "uz.bunyodmusayev.knyaz.admin",
+  "host": "knyaz.bunyodmusayev.uz",
+  "name": "Knyaz Barber — Admin",
+  "launcherName": "Knyaz Admin",
+  "display": "standalone",
+  "themeColor": "#1B1B1A",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#1B1B1A",
+  "enableNotifications": false,
+  "startUrl": "/admin",
+  "iconUrl": "https://knyaz.bunyodmusayev.uz/icons/admin-512.png",
+  "maskableIconUrl": "https://knyaz.bunyodmusayev.uz/icons/admin-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "D:\\Coding\\android-tools\\keys\\knyaz-admin.keystore",
+    "alias": "knyaz-admin"
+  },
+  "appVersionName": "1.0.1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "unknown",
+  "webManifestUrl": "https://knyaz.bunyodmusayev.uz/admin.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://knyaz.bunyodmusayev.uz/",
+  "minSdkVersion": 24,
+  "orientation": "portrait",
+  "fingerprints": [
+    {
+      "value": "DF:3D:71:66:F7:A5:61:70:3F:42:CF:B2:D4:E8:EB:9A:C3:D7:56:D2:E2:03:EA:F3:3B:C8:EE:9E:7D:FB:AE:A9",
+      "name": "release"
+    }
+  ],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1.0.1"
+}

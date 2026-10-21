@@ -1,10 +1,12 @@
 // Telegram bot avatari (640×640 PNG): qora kigiz, oltin halqa, toj + K — favicon.svg bilan bir xil belgi.
 // Telegram avatarni doira qilib kesadi, shuning uchun belgi doira ichida joylashgan.
 // Ishga tushirish: node scripts/make-bot-avatar.mjs  →  branding/telegram-bot-avatar.png
+// Boshqa o'lcham: node scripts/make-bot-avatar.mjs 512 frontend/public/icons/admin-512.png  (ilova ikonkasi)
 import {writeFileSync} from 'node:fs';
 import {deflateSync} from 'node:zlib';
 
-const N = 640;
+const N = Number(process.argv[2] ?? 640);
+const K = N / 640; // 640 px dagi chizma o'lchamlari shu koeffitsient bilan
 const SS = 4; // har piksel uchun 4×4 namuna — silliq qirralar
 const GOLD = [242, 193, 78], WHITE = [242, 240, 234], FELT = [27, 27, 26];
 
@@ -19,7 +21,7 @@ const inPoly = (x, y, pts) => {
 const crown = [[34.6, 25.8], [34.6, 11.7], [42.3, 18.1], [50, 7.8], [57.7, 18.1], [65.4, 11.7], [65.4, 25.8]];
 const kArm = [[40, 56], [58, 20], [74, 20], [52, 58]];
 const kLeg = [[47, 46], [75, 80], [58, 80], [40, 60]];
-const scale = 6.4 * 0.74;
+const scale = (N / 100) * 0.74;
 
 /** Bitta namuna nuqtasining rangi */
 function sample(px, py) {
@@ -28,8 +30,8 @@ function sample(px, py) {
   const kx = (u - 10) / 0.8, ky = (v - 20) / 0.8;
   if ((kx >= 27 && kx <= 42 && ky >= 20 && ky <= 80) || inPoly(kx, ky, kArm) || inPoly(kx, ky, kLeg)) return WHITE;
   const r = Math.hypot(px - N / 2, py - N / 2);
-  if (Math.abs(r - (N / 2 - 34)) <= 3) return GOLD.map((c, i) => Math.round(c * 0.55 + FELT[i] * 0.45));
-  const row = Math.floor(py) % 14;
+  if (Math.abs(r - (N / 2 - 34 * K)) <= 3 * K) return GOLD.map((c, i) => Math.round(c * 0.55 + FELT[i] * 0.45));
+  const row = Math.floor(py / K) % 14;
   if (row >= 10 && row < 13) return FELT.map((c) => Math.round(c * 0.55)); // ariqcha
   if (row === 13) return FELT.map((c) => c + 8);
   return FELT;
@@ -79,6 +81,6 @@ const png = Buffer.concat([
   chunk('IDAT', deflateSync(raw, {level: 9})),
   chunk('IEND', Buffer.alloc(0)),
 ]);
-const out = new URL('../branding/telegram-bot-avatar.png', import.meta.url);
+const out = process.argv[3] ?? new URL('../branding/telegram-bot-avatar.png', import.meta.url);
 writeFileSync(out, png);
-console.log(`Yozildi: branding/telegram-bot-avatar.png (${Math.round(png.length / 1024)} KB)`);
+console.log(`Yozildi: ${out} (${N}×${N}, ${Math.round(png.length / 1024)} KB)`);

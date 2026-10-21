@@ -26,3 +26,13 @@ video/
 
 # Mijozlar ro'yxati (shaxsiy, commit va deploy qilinmaydi)
 leads/
+
+# Android ilova: yig'ilgan fayllar va imzo kaliti (kalit loyihadan tashqarida: D:/Coding/android-tools/keys)
+android/**/build/
+android/.gradle/
+android/app/build/
+*.keystore
+*.jks
+*.apk
+*.aab
+*.apk.idsig
