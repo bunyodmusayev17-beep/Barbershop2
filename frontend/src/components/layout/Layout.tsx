@@ -170,9 +170,14 @@ function Footer() {
       <div className="border-t border-cream/20">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs opacity-70">
           <span>© {new Date().getFullYear()} {BRAND.name} · {t('footer.rights')}</span>
-          <NavLink to="/login" className={({isActive}) => cn('hover:text-cherry', isActive && 'text-cherry')}>
-            {t('footer.staff')}
-          </NavLink>
+          <span className="flex gap-4">
+            <NavLink to="/privacy" className={({isActive}) => cn('hover:text-cherry', isActive && 'text-cherry')}>
+              {t('footer.privacy')}
+            </NavLink>
+            <NavLink to="/login" className={({isActive}) => cn('hover:text-cherry', isActive && 'text-cherry')}>
+              {t('footer.staff')}
+            </NavLink>
+          </span>
         </div>
       </div>
     </footer>

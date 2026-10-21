@@ -1,4 +1,10 @@
+import {API_BASE} from '../lib/native';
+
 const TOKEN_KEY = 'knyaz_token';
+
+/** Ilovada server bergan "/uploads/..." manzillari to'liq manzilga aylanadi (saytda o'zgarmaydi) */
+const absoluteUploads = (_key: string, value: unknown) =>
+  typeof value === 'string' && value.startsWith('/uploads/') ? API_BASE + value : value;
 
 /** Kirish tokeni (localStorage). Har qanday so'rov 401 qaytarsa o'chiriladi va LOGOUT_EVENT yuboriladi. */
 export const auth = {
@@ -39,7 +45,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   const token = auth.token;
   if (token) headers.set('Authorization', `Bearer ${token}`);
 
-  const res = await fetch(path, {...init, headers});
+  const res = await fetch(API_BASE + path, {...init, headers});
   if (res.status === 401 && token) {
     auth.token = null;
     window.dispatchEvent(new Event(LOGOUT_EVENT));
@@ -55,7 +61,8 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     throw new ApiError(res.status, body.code, body.detail ?? body.title ?? res.statusText);
   }
   if (res.status === 204) return undefined as T;
-  return res.json() as Promise<T>;
+  if (!API_BASE) return res.json() as Promise<T>;
+  return JSON.parse(await res.text(), absoluteUploads) as T;
 }
 
 /** JSON so'rov: json('POST', body) */

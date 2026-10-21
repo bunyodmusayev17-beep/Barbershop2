@@ -14,6 +14,7 @@ import {
   DashboardPage,
   GalleryPage,
   LoginPage,
+  PrivacyPage,
   ProfilePage,
   ReviewsPage,
   ServicesPage,
@@ -43,6 +44,7 @@ export default function App() {
                   <Route index element={<HomePage />} />
                   <Route path="book" element={<BookingPage />} />
                   <Route path="login" element={<LoginPage />} />
+                  <Route path="privacy" element={<PrivacyPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Route>
 

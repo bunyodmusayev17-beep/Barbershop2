@@ -15,7 +15,7 @@ export function ToastProvider({children}: {children: ReactNode}) {
   return (
     <ToastContext.Provider value={push}>
       {children}
-      <div className="pointer-events-none fixed right-4 bottom-4 z-[60] flex flex-col gap-2" aria-live="polite">
+      <div className="pointer-events-none fixed right-4 bottom-20 z-[60] lg:bottom-4 flex flex-col gap-2" aria-live="polite">
         {items.map((t) => (
           <div key={t.id} className={cn('rounded-xl px-4 py-3 text-sm font-semibold shadow-lg', t.kind === 'ok' ? 'bg-navy text-cream' : 'bg-cherry text-white')}>
             {t.text}

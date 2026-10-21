@@ -27,6 +27,20 @@ const BARBER_NAV = [
   {to: '/barber/profile', label: 'Profilim va ishlarim', icon: '☺'},
 ];
 
+/** Telefondagi pastki tablar: eng ko'p ishlatiladigan bo'limlar (qisqa nom bilan) */
+const ADMIN_TABS = [
+  {to: '/admin', short: 'Bosh', icon: '◆', end: true},
+  {to: '/admin/appointments', short: 'Navbatlar', icon: '☰', end: false},
+  {to: '/admin/calendar', short: 'Kalendar', icon: '▦', end: false},
+  {to: '/admin/barbers', short: 'Ustalar', icon: '☺', end: false},
+];
+const BARBER_TABS = [
+  {to: '/barber', short: 'Navbatlar', icon: '☰', end: true},
+  {to: '/barber/calendar', short: 'Kalendar', icon: '▦', end: false},
+  {to: '/barber/timeoff', short: 'Ishlamayman', icon: '✚', end: false},
+  {to: '/barber/profile', short: 'Profilim', icon: '☺', end: false},
+];
+
 /** Kirish talab qilinadigan bo'lim. role berilsa — faqat shu rol. */
 export function StaffArea({role}: {role: 'Admin' | 'Barber'}) {
   const {user, loading, logout} = useAuth();
@@ -101,7 +115,7 @@ export function StaffArea({role}: {role: 'Admin' | 'Barber'}) {
             <span className="font-deco text-2xl text-cherry">{BRAND.title}</span>
             <span className="w-10" />
           </header>
-          <main key={location.pathname} className="page-enter mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
+          <main key={location.pathname} className="page-enter mx-auto max-w-7xl px-4 pt-6 pb-28 md:px-8 md:pt-8 lg:pb-8">
             <Suspense
               fallback={
                 <>
@@ -114,6 +128,27 @@ export function StaffArea({role}: {role: 'Admin' | 'Barber'}) {
             </Suspense>
           </main>
         </div>
+
+        {/* Telefonda — ilovalardagidek pastki tablar; qolgan bo'limlar "Menyu" orqali */}
+        <nav aria-label="Asosiy bo'limlar" className="felt fixed inset-x-0 bottom-0 z-30 border-t-2 border-oak pb-[env(safe-area-inset-bottom)] lg:hidden">
+          <div className="mx-auto flex max-w-lg">
+            {(role === 'Admin' ? ADMIN_TABS : BARBER_TABS).map((n) => (
+              <NavLink
+                key={n.to}
+                to={n.to}
+                end={n.end}
+                className={({isActive}) => cn('flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-semibold', isActive ? 'text-gold' : 'text-cream/70')}
+              >
+                <span aria-hidden className="text-lg leading-none">{n.icon}</span>
+                {n.short}
+              </NavLink>
+            ))}
+            <button type="button" onClick={() => setOpen(true)} className="flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px] font-semibold text-cream/70">
+              <span aria-hidden className="text-lg leading-none">☰</span>
+              Menyu
+            </button>
+          </div>
+        </nav>
       </div>
     </ToastProvider>
   );

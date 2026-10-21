@@ -75,7 +75,7 @@ const en: Dict = {
       tooMany: 'Too many attempts. Try again in a minute.',
     },
   },
-  footer: {rights: 'All rights reserved', hours: 'Opening hours', contacts: 'Contacts', staff: 'Staff login'},
+  footer: {rights: 'All rights reserved', hours: 'Opening hours', contacts: 'Contacts', staff: 'Staff login', privacy: 'Privacy policy'},
 };
 
 export default en;

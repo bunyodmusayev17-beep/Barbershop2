@@ -27,6 +27,9 @@ services:
       ConnectionStrings__Default: Host=db;Database=knyazbarber;Username=knyazbarber;Password=${POSTGRES_PASSWORD}
       Jwt__Key: ${JWT_KEY:?}
       ReverseProxy__TrustForwardedHeaders: "true"
+      # Android ilova (Capacitor) sahifalari https://localhost dan so'rov yuboradi (iOS — capacitor://localhost)
+      Cors__Origins__0: https://localhost
+      Cors__Origins__1: capacitor://localhost
       # Bot tokeni serverdagi .env da (TELEGRAM_BOT_TOKEN). Bo'sh bo'lsa bot o'chiq, sayt odatdagidek ishlaydi.
       Telegram__BotToken: ${TELEGRAM_BOT_TOKEN:-}
       Telegram__MiniAppUrl: https://knyaz.bunyodmusayev.uz

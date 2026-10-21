@@ -12,6 +12,7 @@ function lazyWithPreload<T extends ComponentType<any>>(load: Loader<T>) {
 
 export const BookingPage = lazyWithPreload(() => import('../pages/BookingPage'));
 export const LoginPage = lazyWithPreload(() => import('../pages/LoginPage'));
+export const PrivacyPage = lazyWithPreload(() => import('../pages/PrivacyPage'));
 export const StaffArea = lazyWithPreload(() => import('../pages/admin/AdminLayout').then((m) => ({default: m.StaffArea})));
 export const DashboardPage = lazyWithPreload(() => import('../pages/admin/DashboardPage'));
 export const AppointmentsView = lazyWithPreload(() => import('../pages/admin/AppointmentsView'));

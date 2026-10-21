@@ -73,7 +73,7 @@ const uz = {
       tooMany: "Juda ko'p urinish. Bir daqiqadan keyin qayta urinib ko'ring.",
     },
   },
-  footer: {rights: 'Barcha huquqlar himoyalangan', hours: 'Ish vaqti', contacts: 'Aloqa', staff: 'Xodimlar uchun'},
+  footer: {rights: 'Barcha huquqlar himoyalangan', hours: 'Ish vaqti', contacts: 'Aloqa', staff: 'Xodimlar uchun', privacy: 'Maxfiylik siyosati'},
 };
 
 export default uz;

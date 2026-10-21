@@ -75,7 +75,7 @@ const ru: Dict = {
       tooMany: 'Слишком много попыток. Попробуйте через минуту.',
     },
   },
-  footer: {rights: 'Все права защищены', hours: 'Часы работы', contacts: 'Контакты', staff: 'Для сотрудников'},
+  footer: {rights: 'Все права защищены', hours: 'Часы работы', contacts: 'Контакты', staff: 'Для сотрудников', privacy: 'Конфиденциальность'},
 };
 
 export default ru;
