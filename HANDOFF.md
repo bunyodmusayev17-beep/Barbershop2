@@ -32,7 +32,9 @@ Kod tuzilishi ProfessorSyte (`D:\Coding\DotNet\Project\ProfessorSyte`) uslubiga 
 2. Egasidan haqiqiy ma'lumotlar: xizmatlar va narxlar, ustalar (ism, rasm), ish vaqti, rasmlar.
 3. ~~Serverga chiqarish~~ — tayyor (2026-10-19). Yangilash: Git Bash'da `./deploy/deploy.sh`.
 4. ~~Bot tokeni~~ — tayyor: @Knyazbarber_bot ishlayapti.
-5. Android ilova **Knyaz Admin** (TWA, `/admin`): `node scripts/build-admin-apk.cjs <versionCode>` → `android/knyaz-admin.apk`
-   (keyin `./deploy/deploy.sh` — assetlinks.json uchun). Vositalar va **imzo kaliti**: `D:\Coding\android-tools`
-   (`keys/` — zaxiralash shart, yo'qolsa ilovani yangilab bo'lmaydi). Sayt yangilansa APK'ni qayta yig'ish shart emas.
+5. Android ilova **Knyaz Barber** (Capacitor 8, `frontend/android`, paket `uz.bunyodmusayev.knyazbarber`): butun sayt ilova ichida,
+   API — knyaz.bunyodmusayev.uz (CORS `https://localhost`). Yig'ish: `./scripts/build-android.sh <versionCode> [versionName]`
+   → `android-release/*.apk` (o'rnatish) va `*.aab` (Play). **Sayt kodi o'zgarsa ilovani qayta yig'ib, Play'ga yangi versiya yuklash kerak.**
+   Vositalar va **upload kaliti**: `D:\Coding\android-tools` (`keys/knyazbarber-*` — zaxiralash shart). Maxfiylik siyosati: /privacy.
+   (Avvalgi TWA varianti olib tashlangan.)
 6. Admin akkauntini ustaga ham biriktirish (egasi ham admin, ham usta) — boshlangan, hali qilinmagan.
