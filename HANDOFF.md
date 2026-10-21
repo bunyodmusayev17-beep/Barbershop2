@@ -31,4 +31,8 @@ Kod tuzilishi ProfessorSyte (`D:\Coding\DotNet\Project\ProfessorSyte`) uslubiga 
    `apple-touch-icon.png`), sarlavha/footer/admin'da toj + KNYAZ / BARBER (`components/ui/Crown.tsx`).
 2. Egasidan haqiqiy ma'lumotlar: xizmatlar va narxlar, ustalar (ism, rasm), ish vaqti, rasmlar.
 3. ~~Serverga chiqarish~~ — tayyor (2026-10-19). Yangilash: Git Bash'da `./deploy/deploy.sh`.
-4. Bot tokeni (BotFather) — egasi rozi bo'lsa.
+4. ~~Bot tokeni~~ — tayyor: @Knyazbarber_bot ishlayapti.
+5. Android ilova **Knyaz Admin** (TWA, `/admin`): `node scripts/build-admin-apk.cjs <versionCode>` → `android/knyaz-admin.apk`
+   (keyin `./deploy/deploy.sh` — assetlinks.json uchun). Vositalar va **imzo kaliti**: `D:\Coding\android-tools`
+   (`keys/` — zaxiralash shart, yo'qolsa ilovani yangilab bo'lmaydi). Sayt yangilansa APK'ni qayta yig'ish shart emas.
+6. Admin akkauntini ustaga ham biriktirish (egasi ham admin, ham usta) — boshlangan, hali qilinmagan.
